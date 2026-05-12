@@ -1,0 +1,114 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model AdminUser {
+  id        String   @id @default(cuid())
+  email     String   @unique
+  password  String
+  name      String
+  createdAt DateTime @default(now())
+}
+
+model Donor {
+  id               String   @id @default(cuid())
+  name             String
+  email            String
+  amount           Int
+  frequency        String
+  stripeCustomerId String?
+  stripeSessionId  String?  @unique
+  createdAt        DateTime @default(now())
+}
+
+model Adoption {
+  id               String   @id @default(cuid())
+  donorName        String
+  donorEmail       String
+  animalSlug       String
+  animalName       String
+  tierLabel        String
+  amount           Int
+  interval         String
+  stripeCustomerId String?
+  stripeSessionId  String?  @unique
+  active           Boolean  @default(true)
+  createdAt        DateTime @default(now())
+}
+
+model Order {
+  id              String   @id @default(cuid())
+  customerEmail   String
+  customerName    String?
+  phone           String?
+  shippingAddress Json?
+  items           Json
+  total           Int
+  stripeSessionId String?  @unique
+  fulfilled       Boolean  @default(false)
+  createdAt       DateTime @default(now())
+}
+
+model JoinApplication {
+  id          String   @id @default(cuid())
+  firstName   String
+  lastName    String
+  email       String
+  country     String
+  role        String
+  motivation  String?
+  newsletter  Boolean  @default(false)
+  status      String   @default("pending")
+  notes       String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+model AnimalRecord {
+  id                  String   @id @default(cuid())
+  slug                String   @unique
+  name                String
+  species             String
+  commonName          String
+  region              String
+  countries           String[]
+  conservationStatus  String
+  populationCurrent   Int?
+  populationTrend     String   @default("Stable")
+  populationYear      Int      @default(2024)
+  habitat             String[]
+  description         String
+  extendedDescription String?
+  imageUrl            String
+  thumbnailUrl        String
+  facts               Json
+  threats             Json?
+  ecoFacts            Json?
+  adoptionTiers       Json
+  fundingGoal         Int      @default(30000)
+  fundingRaised       Int      @default(0)
+  published           Boolean  @default(true)
+  createdAt           DateTime @default(now())
+  updatedAt           DateTime @updatedAt
+}
+
+model BlogPost {
+  id          String   @id @default(cuid())
+  slug        String   @unique
+  title       String
+  excerpt     String
+  content     String
+  author      String
+  publishedAt DateTime @default(now())
+  tags        String[]
+  imageUrl    String
+  category    String   @default("news")
+  published   Boolean  @default(false)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}

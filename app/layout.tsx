@@ -1,29 +1,40 @@
-import { Geist, Geist_Mono, Figtree } from "next/font/google"
+import type { Metadata } from 'next'
+import type { ReactNode } from 'react'
+import { Inter, Lora } from 'next/font/google'
+import './globals.css'
 
-import "./globals.css"
-import { ThemeProvider } from "@/components/theme-provider"
-import { cn } from "@/lib/utils";
-
-const figtree = Figtree({subsets:['latin'],variable:'--font-sans'})
-
-const fontMono = Geist_Mono({
-  subsets: ["latin"],
-  variable: "--font-mono",
+const inter = Inter({
+  variable: '--font-inter',
+  subsets: ['latin'],
+  display: 'swap',
 })
 
-export default function RootLayout({
-  children,
-}: Readonly<{
-  children: React.ReactNode
-}>) {
+const lora = Lora({
+  variable: '--font-lora',
+  subsets: ['latin'],
+  display: 'swap',
+})
+
+export const metadata: Metadata = {
+  title: {
+    default: 'Earth Protect | Protecting African Wildlife',
+    template: '%s — Earth Protect',
+  },
+  description:
+    'Support conservation of wild animals and environments across Africa. Adopt an animal, donate to protect habitats, or join our global community of conservationists.',
+  keywords: ['Africa', 'wildlife conservation', 'donate', 'adopt animal', 'environment', 'endangered species'],
+  openGraph: {
+    title: 'Earth Protect | Protecting African Wildlife',
+    description: 'Every donation saves a life. Protect Africa\'s wild heart.',
+    type: 'website',
+  },
+}
+
+export default function RootLayout({ children }: { children: ReactNode }) {
   return (
-    <html
-      lang="en"
-      suppressHydrationWarning
-      className={cn("antialiased", fontMono.variable, "font-sans", figtree.variable)}
-    >
-      <body>
-        <ThemeProvider>{children}</ThemeProvider>
+    <html lang="en" suppressHydrationWarning className={`${inter.variable} ${lora.variable}`}>
+      <body className="min-h-screen flex flex-col">
+        {children}
       </body>
     </html>
   )
