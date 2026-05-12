@@ -1,3 +1,5 @@
+export const dynamic = 'force-dynamic'
+
 import { Badge } from '@/components/ui/badge'
 import { Heart, Mail } from 'lucide-react'
 

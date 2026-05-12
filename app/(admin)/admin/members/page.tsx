@@ -1,3 +1,5 @@
+export const dynamic = 'force-dynamic'
+
 import { Badge } from '@/components/ui/badge'
 import { Users, Leaf, Globe, Mail, MapPin, Calendar, MessageSquare } from 'lucide-react'
 import { updateApplicationStatus } from '@/app/actions/join'

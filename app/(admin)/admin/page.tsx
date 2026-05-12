@@ -1,3 +1,5 @@
+export const dynamic = 'force-dynamic'
+
 import { Heart, PawPrint, FileText, ShoppingBag, TrendingUp } from 'lucide-react'
 
 type RecentDonor = { id: string; name: string; email: string; amount: number; frequency: string }

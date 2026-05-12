@@ -1,3 +1,5 @@
+export const dynamic = 'force-dynamic'
+
 import { Badge } from '@/components/ui/badge'
 import { PawPrint, Mail } from 'lucide-react'
 import Link from 'next/link'
