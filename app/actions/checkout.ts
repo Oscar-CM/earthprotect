@@ -129,7 +129,7 @@ export async function handleShopSuccess(sessionId: string) {
         customerEmail: email,
         customerName: name,
         phone: phone ?? null,
-        shippingAddress,
+        shippingAddress: shippingAddress ?? undefined,
         items,
         total: amount,
         stripeSessionId: sessionId,

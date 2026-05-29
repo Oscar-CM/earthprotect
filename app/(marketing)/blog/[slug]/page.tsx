@@ -1,16 +1,28 @@
+export const dynamic = 'force-dynamic'
+
 import { notFound } from 'next/navigation'
 import Link from 'next/link'
 import { ArrowLeft, Calendar, Tag, ChevronRight } from 'lucide-react'
 import { BLOG_POSTS } from '@/lib/constants'
 import { SocialShare } from '@/components/shared/SocialShare'
+import { AdBlock } from '@/components/shared/AdBlock'
 import { Badge } from '@/components/ui/badge'
 
-export async function generateStaticParams() {
-  return BLOG_POSTS.map((p) => ({ slug: p.slug }))
+
+type Ad = {
+  id: string; slug: string; title: string; description: string | null
+  imageUrl: string | null; linkUrl: string | null; linkText: string | null
+  type: string; htmlContent: string | null; active: boolean
+}
+
+async function getAds(): Promise<Ad[]> {
+  try {
+    const { prisma } = await import('@/lib/prisma')
+    return await prisma.ad.findMany({ where: { active: true } }) as Ad[]
+  } catch { return [] }
 }
 
 async function getPost(slug: string) {
-  // Try DB first
   try {
     const { prisma } = await import('@/lib/prisma')
     const dbPost = await prisma.blogPost.findUnique({ where: { slug, published: true } })
@@ -36,23 +48,69 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
   const { slug } = await params
   const post = await getPost(slug)
   if (!post) return {}
+
+  const base = process.env.NEXT_PUBLIC_BASE_URL ?? 'https://earthprotect.org'
+  const pageUrl = `${base}/blog/${post.slug}`
+
   return {
     title: `${post.title} — Earth Protect`,
     description: post.excerpt,
-    openGraph: { title: post.title, description: post.excerpt, images: [{ url: post.imageUrl }] },
+    authors: [{ name: post.author }],
+    openGraph: {
+      type: 'article',
+      siteName: 'Earth Protect',
+      url: pageUrl,
+      title: post.title,
+      description: post.excerpt,
+      publishedTime: new Date(post.publishedAt).toISOString(),
+      authors: [post.author],
+      tags: post.tags as string[],
+      images: [
+        {
+          url: post.imageUrl,
+          width: 1200,
+          height: 630,
+          alt: post.title,
+        },
+      ],
+    },
+    twitter: {
+      card: 'summary_large_image',
+      title: post.title,
+      description: post.excerpt,
+      images: [post.imageUrl],
+    },
   }
+}
+
+type ContentSegment =
+  | { type: 'paragraph'; text: string }
+  | { type: 'ad'; slug: string }
+
+function parseContent(content: string): ContentSegment[] {
+  const parts = content.split(/\n\n+/)
+  const segments: ContentSegment[] = []
+  for (const part of parts) {
+    const trimmed = part.trim()
+    if (!trimmed) continue
+    const adMatch = trimmed.match(/^\{\{ad:([a-z0-9-]+)\}\}$/)
+    if (adMatch) {
+      segments.push({ type: 'ad', slug: adMatch[1] })
+    } else {
+      segments.push({ type: 'paragraph', text: trimmed })
+    }
+  }
+  return segments
 }
 
 export default async function BlogPostPage({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = await params
-  const post = await getPost(slug)
+  const [post, ads] = await Promise.all([getPost(slug), getAds()])
   if (!post) notFound()
 
   const pageUrl = `${process.env.NEXT_PUBLIC_BASE_URL ?? 'https://earthprotect.org'}/blog/${post.slug}`
-
-  const paragraphs: string[] | null = post.content
-    ? (post.content.split(/\n\n+/) as string[]).filter(Boolean)
-    : null
+  const adMap = new Map(ads.map(a => [a.slug, a]))
+  const segments = post.content ? parseContent(post.content) : []
 
   return (
     <div className="min-h-screen pt-20" style={{ background: 'var(--ep-bg)' }}>
@@ -108,21 +166,24 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
         </div>
 
         {/* Excerpt lead */}
-        <p
-          className="text-lg leading-relaxed font-medium mb-8"
-          style={{ color: 'var(--ep-text)' }}
-        >
+        <p className="text-lg leading-relaxed font-medium mb-8" style={{ color: 'var(--ep-text)' }}>
           {post.excerpt}
         </p>
 
-        {/* Content */}
-        {paragraphs && paragraphs.length > 0 ? (
-          <div className="space-y-5 mb-10">
-            {paragraphs.map((para, i) => (
-              <p key={i} className="text-base leading-relaxed" style={{ color: 'var(--ep-muted)' }}>
-                {para}
-              </p>
-            ))}
+        {/* Content with ad shortcodes */}
+        {segments.length > 0 ? (
+          <div className="mb-10">
+            {segments.map((seg, i) => {
+              if (seg.type === 'ad') {
+                const ad = adMap.get(seg.slug)
+                return ad ? <AdBlock key={i} ad={ad} /> : null
+              }
+              return (
+                <p key={i} className="text-base leading-relaxed mb-5" style={{ color: 'var(--ep-muted)' }}>
+                  {seg.text}
+                </p>
+              )
+            })}
           </div>
         ) : (
           <div
@@ -130,11 +191,9 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
             style={{ background: 'var(--ep-bg2)', border: '1px solid var(--ep-border)' }}
           >
             <p className="text-3xl mb-3">📖</p>
-            <p className="font-semibold mb-1" style={{ color: 'var(--ep-text)' }}>
-              Full article coming soon
-            </p>
+            <p className="font-semibold mb-1" style={{ color: 'var(--ep-text)' }}>Full article coming soon</p>
             <p className="text-sm" style={{ color: 'var(--ep-muted)' }}>
-              This story is being written by our conservation team. Check back shortly for the complete article.
+              This story is being written by our conservation team. Check back shortly.
             </p>
           </div>
         )}
@@ -157,17 +216,11 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
         )}
 
         {/* Social share */}
-        <div
-          className="p-5 rounded-xl mb-8"
-          style={{ background: 'var(--ep-card)', border: '1px solid var(--ep-border)' }}
-        >
-          <p className="text-sm font-semibold mb-3" style={{ color: 'var(--ep-text)' }}>
-            Share this story
-          </p>
+        <div className="p-5 rounded-xl mb-8" style={{ background: 'var(--ep-card)', border: '1px solid var(--ep-border)' }}>
+          <p className="text-sm font-semibold mb-3" style={{ color: 'var(--ep-text)' }}>Share this story</p>
           <SocialShare url={pageUrl} title={post.title} description={post.excerpt} />
         </div>
 
-        {/* Back link */}
         <Link
           href="/blog"
           className="inline-flex items-center gap-2 text-sm font-medium hover:opacity-80 transition-opacity"

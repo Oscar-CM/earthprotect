@@ -1,3 +1,5 @@
+export const dynamic = 'force-dynamic'
+
 import { notFound } from 'next/navigation'
 import Link from 'next/link'
 import { MapPin, TrendingUp, TrendingDown, Minus, ArrowLeft, ChevronRight, AlertTriangle, Leaf } from 'lucide-react'
@@ -10,28 +12,65 @@ import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
 import type { Animal } from '@/types'
 
-export async function generateStaticParams() {
-  let dbSlugs: string[] = []
-  try {
-    const { prisma } = await import('@/lib/prisma')
-    const records = await prisma.animalRecord.findMany({ select: { slug: true }, where: { published: true } })
-    dbSlugs = records.map((r: { slug: string }) => r.slug)
-  } catch { /* ignore */ }
-  const staticSlugs = ANIMALS.map((a) => a.slug)
-  return [...new Set([...dbSlugs, ...staticSlugs])].map((slug) => ({ slug }))
-}
 
 export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = await params
-  const animal = ANIMALS.find((a) => a.slug === slug)
+
+  // Try DB first for accurate data
+  let animal: Animal | null = null
+  try {
+    const { prisma } = await import('@/lib/prisma')
+    const r = await prisma.animalRecord.findUnique({ where: { slug, published: true } })
+    if (r) {
+      animal = {
+        slug: r.slug, name: r.name, species: r.species, commonName: r.commonName,
+        region: r.region as Animal['region'], countries: r.countries,
+        conservationStatus: r.conservationStatus as Animal['conservationStatus'],
+        population: { current: r.populationCurrent, trend: r.populationTrend as Animal['population']['trend'], year: r.populationYear },
+        habitat: r.habitat, description: r.description,
+        extendedDescription: r.extendedDescription ?? undefined,
+        imageUrl: r.imageUrl, thumbnailUrl: r.thumbnailUrl,
+        facts: r.facts as unknown as Animal['facts'],
+        threats: undefined, ecoFacts: undefined,
+        adoptionTiers: r.adoptionTiers as unknown as Animal['adoptionTiers'],
+        fundingGoal: r.fundingGoal, fundingRaised: r.fundingRaised,
+      }
+    }
+  } catch { /* fall through */ }
+
+  if (!animal) animal = ANIMALS.find((a) => a.slug === slug) ?? null
   if (!animal) return {}
+
+  const base = process.env.NEXT_PUBLIC_BASE_URL ?? 'https://earthprotect.org'
+  const pageUrl = `${base}/animals/${animal.slug}`
+  const popDesc = animal.population.current
+    ? ` Est. population: ${animal.population.current.toLocaleString()} (${animal.population.trend}).`
+    : ''
+  const ogDescription = `${animal.description}${popDesc} Conservation status: ${animal.conservationStatus}. Help protect this species on Earth Protect.`
+
   return {
     title: `${animal.name} — Earth Protect`,
-    description: animal.description,
+    description: ogDescription,
     openGraph: {
-      title: `Protect the ${animal.name} — Earth Protect`,
-      description: animal.description,
-      images: [{ url: animal.imageUrl }],
+      type: 'website',
+      siteName: 'Earth Protect',
+      url: pageUrl,
+      title: `🐾 ${animal.name} — Help Protect This Species`,
+      description: ogDescription,
+      images: [
+        {
+          url: animal.imageUrl,
+          width: 1200,
+          height: 630,
+          alt: `${animal.name} — ${animal.conservationStatus}`,
+        },
+      ],
+    },
+    twitter: {
+      card: 'summary_large_image',
+      title: `🐾 ${animal.name} — Help Protect This Species`,
+      description: ogDescription,
+      images: [animal.imageUrl],
     },
   }
 }
@@ -80,10 +119,10 @@ async function getAnimal(slug: string): Promise<Animal | null> {
       habitat: r.habitat, description: r.description,
       extendedDescription: r.extendedDescription ?? undefined,
       imageUrl: r.imageUrl, thumbnailUrl: r.thumbnailUrl,
-      facts: r.facts as Animal['facts'],
-      threats: (r.threats as Animal['threats']) ?? undefined,
-      ecoFacts: (r.ecoFacts as Animal['ecoFacts']) ?? undefined,
-      adoptionTiers: r.adoptionTiers as Animal['adoptionTiers'],
+      facts: r.facts as unknown as Animal['facts'],
+      threats: (r.threats as unknown as Animal['threats']) ?? undefined,
+      ecoFacts: (r.ecoFacts as unknown as Animal['ecoFacts']) ?? undefined,
+      adoptionTiers: r.adoptionTiers as unknown as Animal['adoptionTiers'],
       fundingGoal: r.fundingGoal, fundingRaised: r.fundingRaised,
     }
   } catch { /* fall through */ }

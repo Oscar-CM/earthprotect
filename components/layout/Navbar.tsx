@@ -3,11 +3,12 @@
 import { useState, useEffect } from 'react'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
-import { Leaf, Sun, Moon, Menu, X, Heart, ShoppingBag } from 'lucide-react'
+import { Sun, Moon, Menu, X, Heart, ShoppingBag } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { useTheme } from '@/context/ThemeContext'
 import { useShopStore } from '@/store/shopStore'
 import { NAV_LINKS } from '@/lib/constants'
+import { EarthProtectIcon } from '@/components/shared/EarthProtectLogo'
 
 export function Navbar() {
   const pathname = usePathname() ?? ''
@@ -40,7 +41,7 @@ export function Navbar() {
     >
       {/* Logo */}
       <Link href="/" className="flex items-center gap-2 font-bold text-lg mr-auto">
-        <Leaf size={22} style={{ color: 'var(--ep-primary)' }} />
+        <EarthProtectIcon size={30} />
         <span style={{ color: 'var(--ep-text)', fontFamily: 'var(--font-lora)' }}>
           Earth<span style={{ color: 'var(--ep-primary)' }}>Protect</span>
         </span>

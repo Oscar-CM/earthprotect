@@ -1,14 +1,17 @@
 import { PrismaClient } from '@prisma/client'
-import { withAccelerate } from '@prisma/extension-accelerate'
 
-const globalForPrisma = globalThis as unknown as {
-  prisma: ReturnType<typeof createPrismaClient>
+let _prisma: PrismaClient | null = null
+
+export function getPrisma(): PrismaClient {
+  if (!_prisma) {
+    _prisma = new PrismaClient()
+  }
+  return _prisma
 }
 
-function createPrismaClient() {
-  return new PrismaClient().$extends(withAccelerate())
-}
-
-export const prisma = globalForPrisma.prisma ?? createPrismaClient()
-
-if (process.env.NODE_ENV !== 'production') globalForPrisma.prisma = prisma
+// Named export for backwards compat — accessed lazily via getter
+export const prisma: PrismaClient = new Proxy({} as PrismaClient, {
+  get(_target, prop) {
+    return getPrisma()[prop as keyof PrismaClient]
+  },
+})

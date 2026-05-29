@@ -23,6 +23,7 @@ type DefaultValues = {
   description?: string
   extendedDescription?: string | null
   imageUrl?: string
+  thumbnailUrl?: string
   facts?: unknown
   adoptionTiers?: unknown
   fundingGoal?: number
@@ -137,8 +138,22 @@ export function AnimalForm({ action, defaultValues }: AnimalFormProps) {
       </Section>
 
       {/* Description */}
-      <Section title="Description">
-        <Field label="Image URL *" name="imageUrl" defaultValue={defaultValues?.imageUrl} placeholder="https://images.unsplash.com/photo-...?w=1200&q=80" required />
+      <Section title="Photos">
+        <Field label="Main Image URL *" name="imageUrl" defaultValue={defaultValues?.imageUrl} placeholder="https://images.unsplash.com/photo-...?w=1200&q=80" required />
+        <Field
+          label="Thumbnail URL"
+          name="thumbnailUrl"
+          defaultValue={defaultValues?.thumbnailUrl ?? ''}
+          placeholder="https://images.unsplash.com/photo-...?w=400&q=80 (auto-derived from main image if blank)"
+        />
+        {defaultValues?.imageUrl && (
+          <div className="flex gap-3 mt-2">
+            <img src={defaultValues.imageUrl} alt="Main" className="w-24 h-16 object-cover rounded-lg" style={{ border: '1px solid var(--ep-border)' }} />
+            {defaultValues.thumbnailUrl && (
+              <img src={defaultValues.thumbnailUrl} alt="Thumb" className="w-16 h-16 object-cover rounded-lg" style={{ border: '1px solid var(--ep-border)' }} />
+            )}
+          </div>
+        )}
         <div>
           <label className="block text-sm font-medium mb-1.5" style={{ color: 'var(--ep-text)' }}>
             Main Description * <span className="font-normal text-xs" style={{ color: 'var(--ep-muted)' }}>(1–3 sentences shown on card)</span>

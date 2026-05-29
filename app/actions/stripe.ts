@@ -4,6 +4,9 @@ import { redirect } from 'next/navigation'
 import { stripe } from '@/lib/stripe'
 import type { CartItem } from '@/types'
 
+// Card + Link (Stripe one-click) for all checkout types
+const PAYMENT_METHODS = ['card', 'link'] as const
+
 export async function createDonationCheckout(
   amount: number,
   frequency: 'one-time' | 'monthly' | 'annual',
@@ -15,7 +18,7 @@ export async function createDonationCheckout(
   if (frequency === 'one-time') {
     const session = await stripe.checkout.sessions.create({
       mode: 'payment',
-      payment_method_types: ['card'],
+      payment_method_types: [...PAYMENT_METHODS],
       customer_email: donorEmail,
       line_items: [
         {
@@ -39,7 +42,7 @@ export async function createDonationCheckout(
     const interval = frequency === 'monthly' ? 'month' : 'year'
     const session = await stripe.checkout.sessions.create({
       mode: 'subscription',
-      payment_method_types: ['card'],
+      payment_method_types: [...PAYMENT_METHODS],
       customer_email: donorEmail,
       line_items: [
         {
@@ -76,7 +79,7 @@ export async function createAdoptionSubscription(
 
   const session = await stripe.checkout.sessions.create({
     mode: 'subscription',
-    payment_method_types: ['card'],
+    payment_method_types: [...PAYMENT_METHODS],
     customer_email: donorEmail,
     line_items: [
       {
@@ -94,7 +97,6 @@ export async function createAdoptionSubscription(
     ],
     success_url: `${baseUrl}/adopt/success?animal=${animalSlug}&session_id={CHECKOUT_SESSION_ID}`,
     cancel_url: `${baseUrl}/adopt?animal=${animalSlug}`,
-    // interval included so success page can read it without fetching subscription
     metadata: { type: 'adoption', animalSlug, animalName, tierLabel, donorName, interval },
   })
   redirect(session.url!)
@@ -118,10 +120,9 @@ export async function createShopCheckout(cartItems: CartItem[], customerEmail?: 
 
   const session = await stripe.checkout.sessions.create({
     mode: 'payment',
-    payment_method_types: ['card'],
+    payment_method_types: [...PAYMENT_METHODS],
     ...(customerEmail ? { customer_email: customerEmail } : {}),
     line_items: lineItems,
-    // Collect shipping address for physical fulfilment
     shipping_address_collection: {
       allowed_countries: [
         'US', 'GB', 'CA', 'AU', 'DE', 'FR', 'IT', 'ES', 'NL', 'SE',

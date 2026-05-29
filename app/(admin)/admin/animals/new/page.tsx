@@ -1,3 +1,5 @@
+export const dynamic = 'force-dynamic'
+
 import Link from 'next/link'
 import { createAnimal } from '@/app/actions/animals'
 import { ArrowLeft } from 'lucide-react'

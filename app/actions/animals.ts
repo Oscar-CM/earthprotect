@@ -58,7 +58,8 @@ export async function createAnimal(formData: FormData) {
   }
 
   const imageUrl = formData.get('imageUrl') as string
-  const thumbnailUrl = imageUrl.replace('w=1200', 'w=400')
+  const thumbnailUrlRaw = formData.get('thumbnailUrl') as string
+  const thumbnailUrl = thumbnailUrlRaw?.trim() || imageUrl.replace('w=1200', 'w=400')
 
   await prisma.animalRecord.create({
     data: {
@@ -78,8 +79,8 @@ export async function createAnimal(formData: FormData) {
       imageUrl,
       thumbnailUrl,
       facts,
-      threats: null,
-      ecoFacts: null,
+      threats: undefined,
+      ecoFacts: undefined,
       adoptionTiers,
       fundingGoal: Number(formData.get('fundingGoal')) || 30000,
       fundingRaised: 0,
@@ -131,6 +132,8 @@ export async function updateAnimal(id: string, formData: FormData) {
   }
 
   const imageUrl = formData.get('imageUrl') as string
+  const thumbnailUrlRaw = formData.get('thumbnailUrl') as string
+  const thumbnailUrl = thumbnailUrlRaw?.trim() || imageUrl.replace('w=1200', 'w=400')
 
   await prisma.animalRecord.update({
     where: { id },
@@ -148,7 +151,7 @@ export async function updateAnimal(id: string, formData: FormData) {
       description: formData.get('description') as string,
       extendedDescription: (formData.get('extendedDescription') as string) || null,
       imageUrl,
-      thumbnailUrl: imageUrl.replace('w=1200', 'w=400'),
+      thumbnailUrl,
       facts,
       adoptionTiers,
       fundingGoal: Number(formData.get('fundingGoal')) || 30000,

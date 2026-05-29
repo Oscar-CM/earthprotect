@@ -1,7 +1,6 @@
 import Link from 'next/link'
-import { TrendingUp, TrendingDown, Minus, MapPin } from 'lucide-react'
+import { TrendingUp, TrendingDown, Minus, MapPin, ArrowRight } from 'lucide-react'
 import { ConservationBadge } from '@/components/shared/ConservationBadge'
-import { Button } from '@/components/ui/button'
 import type { Animal } from '@/types'
 
 interface AnimalCardProps {
@@ -48,25 +47,41 @@ export function AnimalCard({ animal, variant = 'grid', actionLabel = 'Learn More
         boxShadow: '0 2px 12px rgba(0,0,0,0.06)',
       }}
     >
-      {/* Image */}
-      <div className="relative overflow-hidden" style={{ height: variant === 'featured' ? '240px' : '180px' }}>
+      {/* Clickable image */}
+      <Link href={`/animals/${animal.slug}`} className="block relative overflow-hidden" style={{ height: variant === 'featured' ? '240px' : '180px' }}>
         <div
           className="absolute inset-0 bg-cover bg-center transition-transform duration-500 group-hover:scale-105"
           style={{ backgroundImage: `url(${animal.thumbnailUrl})` }}
         />
+        {/* Subtle overlay on hover */}
+        <div
+          className="absolute inset-0 transition-opacity duration-300 opacity-0 group-hover:opacity-100"
+          style={{ background: 'rgba(0,0,0,0.15)' }}
+        />
         <div className="absolute top-3 left-3">
           <ConservationBadge status={animal.conservationStatus} size="sm" />
         </div>
-      </div>
+        {/* View detail hint */}
+        <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+          <span
+            className="px-3 py-1.5 rounded-full text-xs font-semibold text-white backdrop-blur-sm"
+            style={{ background: 'rgba(45,106,79,0.85)' }}
+          >
+            View Details →
+          </span>
+        </div>
+      </Link>
 
       {/* Body */}
       <div className="p-4 flex flex-col flex-1">
-        <h3
-          className="font-bold text-base mb-1"
-          style={{ fontFamily: 'var(--font-lora)', color: 'var(--ep-text)' }}
-        >
-          {animal.name}
-        </h3>
+        <Link href={`/animals/${animal.slug}`}>
+          <h3
+            className="font-bold text-base mb-1 hover:opacity-80 transition-opacity"
+            style={{ fontFamily: 'var(--font-lora)', color: 'var(--ep-text)' }}
+          >
+            {animal.name}
+          </h3>
+        </Link>
         <p className="text-xs italic mb-2" style={{ color: 'var(--ep-muted)' }}>
           {animal.species}
         </p>
@@ -99,23 +114,28 @@ export function AnimalCard({ animal, variant = 'grid', actionLabel = 'Learn More
 
         <div className="mt-auto flex gap-2">
           <Link href={`/animals/${animal.slug}`} className="flex-1">
-            <Button
-              size="sm"
-              variant="outline"
-              className="w-full text-xs"
-              style={{ borderColor: 'var(--ep-border)', color: 'var(--ep-text)' }}
+            <button
+              className="w-full flex items-center justify-center gap-1.5 px-3 py-2 rounded-lg text-xs font-semibold transition-all duration-200 hover:opacity-90 hover:shadow-md"
+              style={{
+                background: 'var(--ep-primary)',
+                color: 'white',
+              }}
             >
               {actionLabel}
-            </Button>
+              <ArrowRight size={13} />
+            </button>
           </Link>
           <Link href={`/adopt?animal=${animal.slug}`} className="flex-1">
-            <Button
-              size="sm"
-              className="w-full text-xs text-white"
-              style={{ background: 'var(--ep-primary)', border: 'none' }}
+            <button
+              className="w-full px-3 py-2 rounded-lg text-xs font-semibold border transition-all duration-200 hover:opacity-80"
+              style={{
+                borderColor: 'var(--ep-primary)',
+                color: 'var(--ep-primary)',
+                background: 'transparent',
+              }}
             >
               Adopt
-            </Button>
+            </button>
           </Link>
         </div>
       </div>

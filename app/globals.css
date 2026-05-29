@@ -1,3 +1,4 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Lora:wght@400;600;700&display=swap');
 @import "tailwindcss";
 @import "tw-animate-css";
 @import "shadcn/tailwind.css";
@@ -7,6 +8,8 @@
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
+  --font-inter: 'Inter', system-ui, sans-serif;
+  --font-lora: 'Lora', Georgia, serif;
   --font-sans: var(--font-inter);
   --font-heading: var(--font-lora);
   --color-sidebar-ring: var(--sidebar-ring);

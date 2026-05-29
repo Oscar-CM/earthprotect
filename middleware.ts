@@ -8,13 +8,12 @@ export async function middleware(req: NextRequest) {
   })
 
   if (!token) {
-    return NextResponse.redirect(new URL('/admin/login', req.url))
+    return NextResponse.redirect(new URL('/login', req.url))
   }
 
   return NextResponse.next()
 }
 
 export const config = {
-  // Protect all /admin routes except the login page
-  matcher: ['/admin/((?!login$).*)'],
+  matcher: ['/admin/:path*'],
 }

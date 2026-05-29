@@ -1,6 +1,5 @@
 generator client {
-  provider        = "prisma-client-js"
-  previewFeatures = ["accelerate"]
+  provider = "prisma-client-js"
 }
 
 datasource db {
@@ -13,6 +12,7 @@ model AdminUser {
   email     String   @unique
   password  String
   name      String
+  role      String   @default("admin")
   createdAt DateTime @default(now())
 }
 
@@ -110,6 +110,51 @@ model BlogPost {
   imageUrl    String
   category    String   @default("news")
   published   Boolean  @default(false)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+model ShopItem {
+  id           String   @id @default(cuid())
+  slug         String   @unique
+  name         String
+  description  String
+  price        Float
+  imageUrl     String
+  category     String
+  tags         String[]
+  inStock      Boolean  @default(true)
+  proceedsNote String   @default("100% supports wildlife conservation")
+  published    Boolean  @default(true)
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+}
+
+model PageVisit {
+  id          String   @id @default(cuid())
+  path        String
+  visitorHash String
+  referrer    String?
+  userAgent   String?
+  country     String?
+  createdAt   DateTime @default(now())
+
+  @@index([path])
+  @@index([visitorHash])
+  @@index([createdAt])
+}
+
+model Ad {
+  id          String   @id @default(cuid())
+  slug        String   @unique
+  title       String
+  description String?
+  imageUrl    String?
+  linkUrl     String?
+  linkText    String?
+  type        String   @default("inline")
+  htmlContent String?
+  active      Boolean  @default(true)
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
 }

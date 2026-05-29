@@ -1,9 +1,9 @@
 'use client'
 
+import Link from 'next/link'
 import { ShoppingCart, Check } from 'lucide-react'
 import { useState } from 'react'
 import { useShopStore } from '@/store/shopStore'
-import { Button } from '@/components/ui/button'
 import type { ShopItem } from '@/types'
 
 interface ShopItemCardProps {
@@ -14,7 +14,8 @@ export function ShopItemCard({ item }: ShopItemCardProps) {
   const addItem = useShopStore((s) => s.addItem)
   const [added, setAdded] = useState(false)
 
-  function handleAdd() {
+  function handleAdd(e: React.MouseEvent) {
+    e.preventDefault()
     addItem(item)
     setAdded(true)
     setTimeout(() => setAdded(false), 1500)
@@ -29,11 +30,25 @@ export function ShopItemCard({ item }: ShopItemCardProps) {
         boxShadow: '0 2px 12px rgba(0,0,0,0.06)',
       }}
     >
-      <div className="relative overflow-hidden h-52">
+      {/* Clickable image → product detail */}
+      <Link href={`/shop/${item.slug}`} className="relative overflow-hidden h-52 block">
         <div
           className="absolute inset-0 bg-cover bg-center transition-transform duration-500 group-hover:scale-105"
           style={{ backgroundImage: `url(${item.imageUrl})` }}
         />
+        {/* Hover overlay */}
+        <div
+          className="absolute inset-0 transition-opacity duration-300 opacity-0 group-hover:opacity-100"
+          style={{ background: 'rgba(0,0,0,0.15)' }}
+        />
+        <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+          <span
+            className="px-3 py-1.5 rounded-full text-xs font-semibold text-white backdrop-blur-sm"
+            style={{ background: 'rgba(45,106,79,0.85)' }}
+          >
+            View Details →
+          </span>
+        </div>
         {!item.inStock && (
           <div
             className="absolute inset-0 flex items-center justify-center text-sm font-bold"
@@ -48,15 +63,17 @@ export function ShopItemCard({ item }: ShopItemCardProps) {
         >
           {item.category}
         </div>
-      </div>
+      </Link>
 
       <div className="p-4 flex flex-col flex-1">
-        <h3
-          className="font-bold text-sm mb-1"
-          style={{ fontFamily: 'var(--font-lora)', color: 'var(--ep-text)' }}
-        >
-          {item.name}
-        </h3>
+        <Link href={`/shop/${item.slug}`}>
+          <h3
+            className="font-bold text-sm mb-1 hover:opacity-70 transition-opacity"
+            style={{ fontFamily: 'var(--font-lora)', color: 'var(--ep-text)' }}
+          >
+            {item.name}
+          </h3>
+        </Link>
         <p className="text-xs leading-relaxed line-clamp-2 flex-1 mb-2" style={{ color: 'var(--ep-muted)' }}>
           {item.description}
         </p>
@@ -68,19 +85,18 @@ export function ShopItemCard({ item }: ShopItemCardProps) {
           <span className="text-lg font-bold" style={{ color: 'var(--ep-primary)' }}>
             ${item.price}
           </span>
-          <Button
-            size="sm"
+          <button
             onClick={handleAdd}
             disabled={!item.inStock || added}
-            className="gap-1.5 text-white text-xs"
-            style={{ background: added ? 'var(--ep-secondary)' : 'var(--ep-primary)', border: 'none' }}
+            className="flex items-center gap-1.5 px-3 py-2 rounded-lg text-xs font-semibold text-white transition-all duration-200 hover:opacity-90 disabled:opacity-60"
+            style={{ background: added ? 'var(--ep-secondary)' : 'var(--ep-primary)' }}
           >
             {added ? (
               <><Check size={13} /> Added</>
             ) : (
               <><ShoppingCart size={13} /> Add to Cart</>
             )}
-          </Button>
+          </button>
         </div>
       </div>
     </div>

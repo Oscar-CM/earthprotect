@@ -19,7 +19,7 @@ export default async function AdminOrdersPage() {
   let orders: Order[] = []
   try {
     const { prisma } = await import('@/lib/prisma')
-    orders = await prisma.order.findMany({ orderBy: { createdAt: 'desc' } }) as Order[]
+    orders = await prisma.order.findMany({ orderBy: { createdAt: 'desc' } }) as unknown as Order[]
   } catch {
     // DB not connected
   }

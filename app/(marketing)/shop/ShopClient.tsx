@@ -8,6 +8,7 @@ import { Button } from '@/components/ui/button'
 import { useShopStore } from '@/store/shopStore'
 import { createShopCheckout } from '@/app/actions/stripe'
 import { SHOP_ITEMS } from '@/lib/constants'
+import type { ShopItem } from '@/types'
 
 type Category = 'all' | 'apparel' | 'prints' | 'accessories' | 'digital'
 
@@ -19,7 +20,7 @@ const CATEGORIES: { value: Category; label: string }[] = [
   { value: 'digital', label: 'Digital' },
 ]
 
-export function ShopClient() {
+export function ShopClient({ dbItems = [] }: { dbItems?: ShopItem[] }) {
   const [category, setCategory] = useState<Category>('all')
   const [cartOpen, setCartOpen] = useState(false)
   const [isPending, startTransition] = useTransition()
@@ -29,12 +30,15 @@ export function ShopClient() {
 
   useEffect(() => { setHydrated(true) }, [])
 
+  // DB items take precedence; static items fill the rest
+  const allItems = useMemo(() => {
+    const dbSlugs = new Set(dbItems.map((i) => i.slug))
+    return [...dbItems, ...SHOP_ITEMS.filter((i) => !dbSlugs.has(i.slug))]
+  }, [dbItems])
+
   const filtered = useMemo(
-    () =>
-      category === 'all'
-        ? SHOP_ITEMS
-        : SHOP_ITEMS.filter((i) => i.category === category),
-    [category]
+    () => category === 'all' ? allItems : allItems.filter((i) => i.category === category),
+    [category, allItems]
   )
 
   function handleCheckout() {
