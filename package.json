@@ -14,6 +14,8 @@
     "db:push": "prisma db push",
     "db:migrate": "prisma migrate dev",
     "db:seed": "tsx prisma/seed.ts",
+    "db:seed-animals": "tsx prisma/seed-animals.ts",
+    "db:seed-animals-update": "tsx prisma/seed-animals.ts --update",
     "db:studio": "prisma studio"
   },
   "prisma": {

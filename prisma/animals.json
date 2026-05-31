@@ -1,0 +1,402 @@
+[
+  {
+    "name": "African Elephant",
+    "slug": "african-elephant",
+    "species": "Loxodonta africana",
+    "commonName": "African Elephant",
+    "region": "East Africa",
+    "countries": "Kenya, Tanzania, Uganda",
+    "habitat": "Savannah, Woodland, Grassland, Wetland",
+    "conservationStatus": "Endangered",
+    "populationTrend": "Decreasing",
+    "populationCurrent": 415000,
+    "populationYear": 2024,
+    "imageUrl": "https://images.unsplash.com/photo-1557050543-4d5f4e07ef46?w=1200&q=80",
+    "thumbnailUrl": "https://images.unsplash.com/photo-1557050543-4d5f4e07ef46?w=400&q=80",
+    "description": "The African elephant is the largest land animal on Earth. It plays a critical role in maintaining healthy ecosystems across Africa.",
+    "extendedDescription": "African elephants live in complex social groups led by experienced females known as matriarchs. They are highly intelligent and communicate using sounds that can travel long distances.\n\nTheir activities help shape landscapes by dispersing seeds, clearing vegetation, and creating water access points. Habitat loss and poaching remain significant threats despite conservation efforts.",
+    "facts": [
+      { "label": "Weight", "value": "2700–6000 kg" },
+      { "label": "Height", "value": "2.5–4 m" },
+      { "label": "Lifespan", "value": "60–70 years" },
+      { "label": "Diet", "value": "Herbivore" },
+      { "label": "Social Structure", "value": "Matriarch-led herds" },
+      { "label": "Top Speed", "value": "40 km/h" }
+    ],
+    "adoptionTiers": [
+      {
+        "label": "Basic Sponsor",
+        "amount": 15,
+        "description": "Support elephant conservation.",
+        "perks": ["Digital certificate", "Monthly updates"]
+      },
+      {
+        "label": "Guardian",
+        "amount": 35,
+        "description": "Help protect elephant habitats.",
+        "perks": ["Digital certificate", "Monthly updates", "Wildlife photo print"]
+      }
+    ],
+    "fundingGoal": 75000
+  },
+  {
+    "name": "African Lion",
+    "slug": "african-lion",
+    "species": "Panthera leo",
+    "commonName": "African Lion",
+    "region": "East Africa",
+    "countries": "Kenya, Tanzania",
+    "habitat": "Savannah, Grassland, Woodland",
+    "conservationStatus": "Vulnerable",
+    "populationTrend": "Decreasing",
+    "populationCurrent": 23000,
+    "populationYear": 2024,
+    "imageUrl": "https://images.unsplash.com/photo-1546182990-dffeafbe841d?w=1200&q=80",
+    "thumbnailUrl": "https://images.unsplash.com/photo-1546182990-dffeafbe841d?w=400&q=80",
+    "description": "The African lion is one of the world's most iconic predators. Lions live in social groups known as prides.",
+    "extendedDescription": "African lions occupy grasslands and savannahs where prey is abundant. Females typically work together to hunt while males defend territory.\n\nConservation programs focus on reducing human-wildlife conflict and protecting remaining habitats. Lion populations continue to decline in many regions.",
+    "facts": [
+      { "label": "Weight", "value": "120–250 kg" },
+      { "label": "Length", "value": "1.4–2.5 m" },
+      { "label": "Lifespan", "value": "10–14 years" },
+      { "label": "Diet", "value": "Carnivore" },
+      { "label": "Social Structure", "value": "Prides" },
+      { "label": "Top Speed", "value": "80 km/h" }
+    ],
+    "adoptionTiers": [
+      {
+        "label": "Basic Sponsor",
+        "amount": 15,
+        "description": "Support lion conservation.",
+        "perks": ["Digital certificate", "Monthly updates"]
+      },
+      {
+        "label": "Guardian",
+        "amount": 35,
+        "description": "Protect lion habitats.",
+        "perks": ["Digital certificate", "Monthly updates", "Wildlife photo print"]
+      }
+    ],
+    "fundingGoal": 50000
+  },
+  {
+    "name": "Black Rhinoceros",
+    "slug": "black-rhinoceros",
+    "species": "Diceros bicornis",
+    "commonName": "Black Rhinoceros",
+    "region": "Southern Africa",
+    "countries": "Namibia, South Africa, Zimbabwe",
+    "habitat": "Savannah, Woodland, Shrubland",
+    "conservationStatus": "Critically Endangered",
+    "populationTrend": "Increasing",
+    "populationCurrent": 6421,
+    "populationYear": 2024,
+    "imageUrl": "https://images.unsplash.com/photo-1549366021-9f761d450615?w=1200&q=80",
+    "thumbnailUrl": "https://images.unsplash.com/photo-1549366021-9f761d450615?w=400&q=80",
+    "description": "The black rhinoceros is one of Africa's most endangered mammals. Intensive conservation efforts have helped its population recover slowly.",
+    "extendedDescription": "Black rhinos are solitary browsers that feed on shrubs and small trees. Their distinctive hooked upper lip helps them grasp vegetation.\n\nPoaching for rhino horn remains the greatest threat to their survival. Protected reserves and anti-poaching programs have improved population trends.",
+    "facts": [
+      { "label": "Weight", "value": "800–1400 kg" },
+      { "label": "Height", "value": "1.4–1.8 m" },
+      { "label": "Lifespan", "value": "35–50 years" },
+      { "label": "Diet", "value": "Browsers" },
+      { "label": "Social Structure", "value": "Solitary" },
+      { "label": "Top Speed", "value": "55 km/h" }
+    ],
+    "adoptionTiers": [
+      {
+        "label": "Basic Sponsor",
+        "amount": 20,
+        "description": "Support rhino protection.",
+        "perks": ["Digital certificate", "Monthly updates"]
+      },
+      {
+        "label": "Guardian",
+        "amount": 50,
+        "description": "Support anti-poaching efforts.",
+        "perks": ["Digital certificate", "Monthly updates", "Photo print"]
+      }
+    ],
+    "fundingGoal": 120000
+  },
+  {
+    "name": "Mountain Gorilla",
+    "slug": "mountain-gorilla",
+    "species": "Gorilla beringei beringei",
+    "commonName": "Mountain Gorilla",
+    "region": "Central Africa",
+    "countries": "Rwanda, Uganda, Democratic Republic of the Congo",
+    "habitat": "Mountain Forest, Bamboo Forest",
+    "conservationStatus": "Endangered",
+    "populationTrend": "Increasing",
+    "populationCurrent": 1063,
+    "populationYear": 2024,
+    "imageUrl": "https://images.unsplash.com/photo-1540573133985-87b6da6d54a9?w=1200&q=80",
+    "thumbnailUrl": "https://images.unsplash.com/photo-1540573133985-87b6da6d54a9?w=400&q=80",
+    "description": "Mountain gorillas are among the rarest great apes on Earth. They live in family groups led by dominant silverback males.",
+    "extendedDescription": "These gorillas inhabit high-altitude forests where they feed on leaves, shoots, and stems. They are highly social and intelligent animals.\n\nConservation partnerships between governments and local communities have contributed to population growth. Ecotourism also helps fund their protection.",
+    "facts": [
+      { "label": "Weight", "value": "140–220 kg" },
+      { "label": "Height", "value": "1.4–1.8 m" },
+      { "label": "Lifespan", "value": "35–40 years" },
+      { "label": "Diet", "value": "Herbivore" },
+      { "label": "Group Size", "value": "5–30 members" },
+      { "label": "Habitat", "value": "Mountain forests" }
+    ],
+    "adoptionTiers": [
+      {
+        "label": "Basic Sponsor",
+        "amount": 25,
+        "description": "Support gorilla conservation.",
+        "perks": ["Certificate", "Monthly updates"]
+      },
+      {
+        "label": "Guardian",
+        "amount": 60,
+        "description": "Protect gorilla habitats.",
+        "perks": ["Certificate", "Updates", "Photo print"]
+      }
+    ],
+    "fundingGoal": 100000
+  },
+  {
+    "name": "Cheetah",
+    "slug": "cheetah",
+    "species": "Acinonyx jubatus",
+    "commonName": "Cheetah",
+    "region": "Southern Africa",
+    "countries": "Botswana, Namibia, South Africa",
+    "habitat": "Savannah, Grassland",
+    "conservationStatus": "Vulnerable",
+    "populationTrend": "Decreasing",
+    "populationCurrent": 7100,
+    "populationYear": 2024,
+    "imageUrl": "https://images.unsplash.com/photo-1517849845537-4d257902454a?w=1200&q=80",
+    "thumbnailUrl": "https://images.unsplash.com/photo-1517849845537-4d257902454a?w=400&q=80",
+    "description": "The cheetah is the fastest land animal. It relies on speed and agility to catch prey.",
+    "extendedDescription": "Cheetahs are built for acceleration and can reach extraordinary speeds over short distances. Their lightweight body and long tail provide balance during chases.\n\nHabitat fragmentation and declining prey populations continue to threaten wild cheetahs. Conservation efforts focus on landscape connectivity.",
+    "facts": [
+      { "label": "Weight", "value": "21–72 kg" },
+      { "label": "Top Speed", "value": "120 km/h" },
+      { "label": "Lifespan", "value": "10–12 years" },
+      { "label": "Diet", "value": "Carnivore" },
+      { "label": "Hunting Style", "value": "Pursuit predator" },
+      { "label": "Social Structure", "value": "Solitary" }
+    ],
+    "adoptionTiers": [
+      {
+        "label": "Basic Sponsor",
+        "amount": 15,
+        "description": "Support cheetah conservation.",
+        "perks": ["Certificate", "Monthly updates"]
+      },
+      {
+        "label": "Guardian",
+        "amount": 35,
+        "description": "Protect cheetah habitats.",
+        "perks": ["Certificate", "Updates", "Photo print"]
+      }
+    ],
+    "fundingGoal": 45000
+  },
+  {
+    "name": "Giraffe",
+    "slug": "giraffe",
+    "species": "Giraffa camelopardalis",
+    "commonName": "Giraffe",
+    "region": "East Africa",
+    "countries": "Kenya, Tanzania",
+    "habitat": "Savannah, Woodland",
+    "conservationStatus": "Vulnerable",
+    "populationTrend": "Decreasing",
+    "populationCurrent": 117000,
+    "populationYear": 2024,
+    "imageUrl": "https://images.unsplash.com/photo-1547721064-da6cfb341d50?w=1200&q=80",
+    "thumbnailUrl": "https://images.unsplash.com/photo-1547721064-da6cfb341d50?w=400&q=80",
+    "description": "The giraffe is the tallest land animal in the world. Its long neck allows it to browse high tree canopies.",
+    "extendedDescription": "Giraffes are adapted to life in open savannahs and woodlands. Their distinctive coat patterns help identify individuals.\n\nPopulation declines have occurred due to habitat loss and fragmentation. Several conservation programs are focused on protecting giraffe populations.",
+    "facts": [
+      { "label": "Height", "value": "4.3–5.7 m" },
+      { "label": "Weight", "value": "800–1900 kg" },
+      { "label": "Lifespan", "value": "20–25 years" },
+      { "label": "Diet", "value": "Leaves and shoots" },
+      { "label": "Tongue Length", "value": "50 cm" },
+      { "label": "Top Speed", "value": "60 km/h" }
+    ],
+    "adoptionTiers": [
+      {
+        "label": "Basic Sponsor",
+        "amount": 15,
+        "description": "Support giraffe conservation.",
+        "perks": ["Certificate", "Monthly updates"]
+      },
+      {
+        "label": "Guardian",
+        "amount": 35,
+        "description": "Protect giraffe habitats.",
+        "perks": ["Certificate", "Updates", "Photo print"]
+      }
+    ],
+    "fundingGoal": 30000
+  },
+  {
+    "name": "African Wild Dog",
+    "slug": "african-wild-dog",
+    "species": "Lycaon pictus",
+    "commonName": "African Wild Dog",
+    "region": "Southern Africa",
+    "countries": "Botswana, Zimbabwe, Zambia",
+    "habitat": "Savannah, Woodland",
+    "conservationStatus": "Endangered",
+    "populationTrend": "Decreasing",
+    "populationCurrent": 6600,
+    "populationYear": 2024,
+    "imageUrl": "https://images.unsplash.com/photo-1516939884455-1445c8652f83?w=1200&q=80",
+    "thumbnailUrl": "https://images.unsplash.com/photo-1516939884455-1445c8652f83?w=400&q=80",
+    "description": "African wild dogs are among Africa's most successful hunters. They rely heavily on teamwork within their packs.",
+    "extendedDescription": "These highly social carnivores communicate through vocalizations and body language. Pack members cooperate when hunting and raising pups.\n\nDisease, habitat fragmentation, and human conflict remain major threats. Protected landscapes are essential for their survival.",
+    "facts": [
+      { "label": "Weight", "value": "18–36 kg" },
+      { "label": "Pack Size", "value": "5–30" },
+      { "label": "Lifespan", "value": "10–12 years" },
+      { "label": "Diet", "value": "Carnivore" },
+      { "label": "Success Rate", "value": "Up to 80%" },
+      { "label": "Top Speed", "value": "71 km/h" }
+    ],
+    "adoptionTiers": [
+      {
+        "label": "Basic Sponsor",
+        "amount": 15,
+        "description": "Support wild dog conservation.",
+        "perks": ["Certificate", "Monthly updates"]
+      },
+      {
+        "label": "Guardian",
+        "amount": 35,
+        "description": "Protect pack territories.",
+        "perks": ["Certificate", "Updates", "Photo print"]
+      }
+    ],
+    "fundingGoal": 35000
+  },
+  {
+    "name": "Hippopotamus",
+    "slug": "hippopotamus",
+    "species": "Hippopotamus amphibius",
+    "commonName": "Hippopotamus",
+    "region": "East Africa",
+    "countries": "Kenya, Tanzania, Uganda",
+    "habitat": "Rivers, Wetlands, Lakes",
+    "conservationStatus": "Vulnerable",
+    "populationTrend": "Decreasing",
+    "populationCurrent": 130000,
+    "populationYear": 2024,
+    "imageUrl": "https://images.unsplash.com/photo-1549366021-9f761d450615?w=1200&q=80",
+    "thumbnailUrl": "https://images.unsplash.com/photo-1549366021-9f761d450615?w=400&q=80",
+    "description": "Hippos spend most of the day submerged in water. They emerge at night to graze on grasses.",
+    "extendedDescription": "Hippos are among Africa's largest mammals and are closely tied to freshwater habitats. Their presence influences aquatic ecosystems.\n\nHabitat degradation and illegal hunting continue to affect populations. Protected wetlands are critical for their survival.",
+    "facts": [
+      { "label": "Weight", "value": "1300–3200 kg" },
+      { "label": "Lifespan", "value": "40–50 years" },
+      { "label": "Diet", "value": "Grass" },
+      { "label": "Habitat", "value": "Freshwater systems" },
+      { "label": "Activity", "value": "Nocturnal grazing" },
+      { "label": "Top Speed", "value": "30 km/h" }
+    ],
+    "adoptionTiers": [
+      {
+        "label": "Basic Sponsor",
+        "amount": 15,
+        "description": "Support hippo conservation.",
+        "perks": ["Certificate", "Monthly updates"]
+      },
+      {
+        "label": "Guardian",
+        "amount": 35,
+        "description": "Protect freshwater habitats.",
+        "perks": ["Certificate", "Updates", "Photo print"]
+      }
+    ],
+    "fundingGoal": 25000
+  },
+  {
+    "name": "Plains Zebra",
+    "slug": "plains-zebra",
+    "species": "Equus quagga",
+    "commonName": "Plains Zebra",
+    "region": "East Africa",
+    "countries": "Kenya, Tanzania",
+    "habitat": "Grassland, Savannah",
+    "conservationStatus": "Near Threatened",
+    "populationTrend": "Stable",
+    "populationCurrent": 500000,
+    "populationYear": 2024,
+    "imageUrl": "https://images.unsplash.com/photo-1526318472351-c75fcf070305?w=1200&q=80",
+    "thumbnailUrl": "https://images.unsplash.com/photo-1526318472351-c75fcf070305?w=400&q=80",
+    "description": "The plains zebra is famous for its distinctive black-and-white stripes. Every zebra has a unique stripe pattern.",
+    "extendedDescription": "Zebras are highly social animals that live in family groups and larger herds. They are key participants in Africa's great migrations.\n\nTheir grazing behavior helps maintain healthy grasslands. Habitat fragmentation can disrupt migration routes.",
+    "facts": [
+      { "label": "Weight", "value": "200–450 kg" },
+      { "label": "Lifespan", "value": "20–25 years" },
+      { "label": "Diet", "value": "Grass" },
+      { "label": "Social Structure", "value": "Herds" },
+      { "label": "Migration", "value": "Seasonal" },
+      { "label": "Top Speed", "value": "65 km/h" }
+    ],
+    "adoptionTiers": [
+      {
+        "label": "Basic Sponsor",
+        "amount": 15,
+        "description": "Support zebra conservation.",
+        "perks": ["Certificate", "Monthly updates"]
+      },
+      {
+        "label": "Guardian",
+        "amount": 35,
+        "description": "Protect migration corridors.",
+        "perks": ["Certificate", "Updates", "Photo print"]
+      }
+    ],
+    "fundingGoal": 20000
+  },
+  {
+    "name": "African Penguin",
+    "slug": "african-penguin",
+    "species": "Spheniscus demersus",
+    "commonName": "African Penguin",
+    "region": "Southern Africa",
+    "countries": "South Africa, Namibia",
+    "habitat": "Coastal Islands, Marine Waters",
+    "conservationStatus": "Endangered",
+    "populationTrend": "Decreasing",
+    "populationCurrent": 20000,
+    "populationYear": 2024,
+    "imageUrl": "https://images.unsplash.com/photo-1551986782-d0169b3f8fa7?w=1200&q=80",
+    "thumbnailUrl": "https://images.unsplash.com/photo-1551986782-d0169b3f8fa7?w=400&q=80",
+    "description": "The African penguin is the only penguin species native to Africa. It breeds along the southern coast of the continent.",
+    "extendedDescription": "African penguins depend on healthy marine ecosystems and abundant fish stocks. Their distinctive calls have earned them the nickname 'jackass penguin'.\n\nClimate change, overfishing, and habitat disturbance continue to impact populations. Conservation programs focus on breeding colonies and marine protection.",
+    "facts": [
+      { "label": "Weight", "value": "2–5 kg" },
+      { "label": "Height", "value": "60–70 cm" },
+      { "label": "Lifespan", "value": "15–20 years" },
+      { "label": "Diet", "value": "Fish and squid" },
+      { "label": "Habitat", "value": "Marine coastlines" },
+      { "label": "Swimming Speed", "value": "20 km/h" }
+    ],
+    "adoptionTiers": [
+      {
+        "label": "Basic Sponsor",
+        "amount": 15,
+        "description": "Support penguin conservation.",
+        "perks": ["Certificate", "Monthly updates"]
+      },
+      {
+        "label": "Guardian",
+        "amount": 35,
+        "description": "Protect nesting colonies.",
+        "perks": ["Certificate", "Updates", "Photo print"]
+      }
+    ],
+    "fundingGoal": 40000
+  }
+]
