@@ -14,6 +14,7 @@ const ACTION_LINKS = [
   { label: 'Make a Donation', href: '/donate' },
   { label: 'Join the Community', href: '/join' },
   { label: 'Volunteer', href: '/join' },
+  { label: 'Careers', href: '/careers' },
   { label: 'Gift Shop', href: '/shop' },
 ]
 

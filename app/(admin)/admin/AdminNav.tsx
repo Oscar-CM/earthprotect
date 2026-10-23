@@ -6,7 +6,7 @@ import { usePathname } from 'next/navigation'
 import {
   LayoutDashboard, FileText, Heart, PawPrint, LogOut, ShieldCheck,
   ShoppingBag, Rabbit, Users, Package, Megaphone, UserCog, BarChart2,
-  Menu, X,
+  Menu, X, Briefcase,
 } from 'lucide-react'
 import { EarthProtectIcon } from '@/components/shared/EarthProtectLogo'
 
@@ -16,6 +16,7 @@ const navItems = [
   { label: 'Blog Posts', href: '/admin/blog', icon: FileText },
   { label: 'Ads', href: '/admin/ads', icon: Megaphone },
   { label: 'Shop Items', href: '/admin/shop', icon: Package },
+  { label: 'Careers', href: '/admin/careers', icon: Briefcase },
   { label: 'Members', href: '/admin/members', icon: Users },
   { label: 'Donors', href: '/admin/donors', icon: Heart },
   { label: 'Adopters', href: '/admin/adopters', icon: PawPrint },

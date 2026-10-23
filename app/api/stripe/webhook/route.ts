@@ -31,6 +31,8 @@ export async function POST(req: NextRequest) {
         const amountCents = session.amount_total ?? 0
 
         if (type === 'adoption') {
+          // The success page may already have recorded this session
+          if (await prisma.adoption.findUnique({ where: { stripeSessionId: session.id } })) break
           await prisma.adoption.create({
             data: {
               donorName: name,
@@ -56,6 +58,7 @@ export async function POST(req: NextRequest) {
             })
           }
         } else if (type === 'donation') {
+          if (await prisma.donor.findUnique({ where: { stripeSessionId: session.id } })) break
           await prisma.donor.create({
             data: {
               name,
@@ -76,6 +79,7 @@ export async function POST(req: NextRequest) {
             })
           }
         } else if (type === 'shop') {
+          if (await prisma.order.findUnique({ where: { stripeSessionId: session.id } })) break
           const lineItems = await stripe.checkout.sessions.listLineItems(session.id, { limit: 50 })
           const items = lineItems.data.map((li) => ({
             name: li.description ?? '',

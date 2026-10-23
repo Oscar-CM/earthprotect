@@ -15,6 +15,7 @@ export const NAV_LINKS: NavLink[] = [
   { label: 'Blog', href: '/blog' },
   { label: 'Shop', href: '/shop' },
   { label: 'About', href: '/about' },
+  { label: 'Careers', href: '/careers' },
 ]
 
 export const IMPACT_STATS: ImpactStat[] = [

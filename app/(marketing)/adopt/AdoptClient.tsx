@@ -3,7 +3,6 @@
 import { useState, useTransition, useEffect } from 'react'
 import { useSearchParams } from 'next/navigation'
 import { ArrowLeft, ArrowRight, Check, Loader2 } from 'lucide-react'
-import { ANIMALS } from '@/lib/constants'
 import { AnimalCard } from '@/components/cards/AnimalCard'
 import { CertificatePreview } from '@/components/shared/CertificatePreview'
 import { SectionTitle } from '@/components/shared/SectionTitle'
@@ -14,15 +13,14 @@ import type { Animal, AdoptionTier } from '@/types'
 
 type Step = 1 | 2 | 3
 
-export function AdoptClient() {
+export function AdoptClient({ animals }: { animals: Animal[] }) {
   const params = useSearchParams()
   const preselectedSlug = params.get('animal')
   const preselectedTierId = params.get('tier')
+  const preselected = preselectedSlug ? animals.find((a) => a.slug === preselectedSlug) ?? null : null
 
-  const [step, setStep] = useState<Step>(preselectedSlug ? 2 : 1)
-  const [selectedAnimal, setSelectedAnimal] = useState<Animal | null>(
-    preselectedSlug ? ANIMALS.find((a) => a.slug === preselectedSlug) ?? null : null
-  )
+  const [step, setStep] = useState<Step>(preselected ? 2 : 1)
+  const [selectedAnimal, setSelectedAnimal] = useState<Animal | null>(preselected)
   const [selectedTier, setSelectedTier] = useState<AdoptionTier | null>(null)
   const [name, setName] = useState('')
   const [email, setEmail] = useState('')
@@ -55,19 +53,13 @@ export function AdoptClient() {
       setError('Please fill in your name and email.')
       return
     }
-    startTransition(() => {
-      createAdoptionSubscription(
-        selectedAnimal.slug,
-        selectedAnimal.name,
-        selectedTier.label,
-        selectedTier.amount,
-        selectedTier.interval,
-        email,
-        name
-      ).catch((err) => {
-        if (err?.digest?.startsWith('NEXT_REDIRECT')) return
+    startTransition(async () => {
+      try {
+        await createAdoptionSubscription(selectedAnimal.slug, selectedTier.id, email.trim(), name.trim())
+      } catch (err) {
+        if ((err as { digest?: string })?.digest?.startsWith('NEXT_REDIRECT')) throw err
         setError('Something went wrong. Please try again.')
-      })
+      }
     })
   }
 
@@ -131,7 +123,7 @@ export function AdoptClient() {
               Choose the animal you want to adopt
             </h2>
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
-              {ANIMALS.slice(0, 12).map((animal) => (
+              {animals.map((animal) => (
                 <div
                   key={animal.slug}
                   onClick={() => handleSelectAnimal(animal)}

@@ -4,6 +4,7 @@ import { revalidatePath } from 'next/cache'
 import { redirect } from 'next/navigation'
 import { auth } from '@/auth'
 import { prisma } from '@/lib/prisma'
+import { fetchShopifyProducts, shopifyProductToShopItem } from '@/lib/shopify'
 
 async function requireAdmin() {
   const session = await auth()
@@ -79,6 +80,24 @@ export async function deleteShopItem(id: string) {
 export async function toggleShopItemPublished(id: string, published: boolean) {
   await requireAdmin()
   await prisma.shopItem.update({ where: { id }, data: { published } })
+  revalidatePath('/shop')
+  revalidatePath('/admin/shop')
+}
+
+export async function syncShopifyProducts() {
+  await requireAdmin()
+
+  const products = await fetchShopifyProducts()
+
+  for (const product of products) {
+    const data = shopifyProductToShopItem(product)
+    await prisma.shopItem.upsert({
+      where: { shopifyId: data.shopifyId },
+      create: { ...data, proceedsNote: '100% supports wildlife conservation' },
+      update: data,
+    })
+  }
+
   revalidatePath('/shop')
   revalidatePath('/admin/shop')
 }

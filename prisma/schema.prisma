@@ -56,18 +56,109 @@ model Order {
 }
 
 model JoinApplication {
-  id          String   @id @default(cuid())
-  firstName   String
-  lastName    String
-  email       String
-  country     String
-  role        String
-  motivation  String?
-  newsletter  Boolean  @default(false)
-  status      String   @default("pending")
-  notes       String?
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
+  id                String   @id @default(cuid())
+  firstName         String
+  lastName          String
+  email             String
+  country           String
+  role              String
+  motivation        String?
+  newsletter        Boolean  @default(false)
+  status            String   @default("pending")
+  notes             String?
+  // Career applications (openingId is null for community/volunteer/ambassador joins)
+  openingId         String?
+  opening           CareerOpening? @relation(fields: [openingId], references: [id], onDelete: SetNull)
+  phone             String?
+  residence         String?
+  yearsExperience   String?
+  rightToWork       Boolean  @default(false)
+  backgroundConsent Boolean  @default(false)
+  stage             String   @default("applied")
+  events            ApplicationEvent[]
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime @updatedAt
+
+  @@index([openingId])
+  @@index([stage])
+}
+
+/// Timeline entry for an application: submitted, stage changes, notes.
+model ApplicationEvent {
+  id            String          @id @default(cuid())
+  applicationId String
+  application   JoinApplication @relation(fields: [applicationId], references: [id], onDelete: Cascade)
+  type          String // applied | stage_change | note
+  fromStage     String?
+  toStage       String?
+  note          String?
+  actor         String?
+  createdAt     DateTime        @default(now())
+
+  @@index([applicationId])
+}
+
+/// A country Earth Protect hires in.
+model CareerCountry {
+  id           String   @id @default(cuid())
+  code         String   @unique
+  name         String
+  flag         String   @default("")
+  region       String   @default("")
+  focus        String   @default("")
+  languages    String   @default("")
+  verification String[]
+  laws         String[]
+  published    Boolean  @default(true)
+  sortOrder    Int      @default(0)
+  openings     CareerOpening[]
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+}
+
+/// A reusable job description (the default for every country).
+model CareerRole {
+  id               String   @id @default(cuid())
+  slug             String   @unique
+  title            String
+  reportsTo        String   @default("")
+  employmentType   String   @default("Full-time")
+  summary          String
+  responsibilities String[]
+  requirements     String[]
+  niceToHave       String[]
+  published        Boolean  @default(true)
+  sortOrder        Int      @default(0)
+  openings         CareerOpening[]
+  createdAt        DateTime @default(now())
+  updatedAt        DateTime @updatedAt
+}
+
+/// A role in a specific country: status, dates, country-specific requirements.
+model CareerOpening {
+  id                    String   @id @default(cuid())
+  countryId             String
+  country               CareerCountry @relation(fields: [countryId], references: [id], onDelete: Cascade)
+  roleId                String
+  role                  CareerRole    @relation(fields: [roleId], references: [id], onDelete: Cascade)
+  status                String   @default("open") // draft | open | closed
+  positions             Int      @default(1)
+  location              String?
+  salary                String?
+  opensAt               DateTime?
+  closesAt              DateTime?
+  summaryOverride       String?
+  extraResponsibilities String[]
+  extraRequirements     String[]
+  extraNiceToHave       String[]
+  /// Hiring timeline shown publicly: [{ "date": "2026-11-01", "label": "Interviews" }]
+  timeline              Json?
+  internalNotes         String?
+  applications          JoinApplication[]
+  createdAt             DateTime @default(now())
+  updatedAt             DateTime @updatedAt
+
+  @@unique([countryId, roleId])
 }
 
 model AnimalRecord {
@@ -126,6 +217,9 @@ model ShopItem {
   inStock      Boolean  @default(true)
   proceedsNote String   @default("100% supports wildlife conservation")
   published    Boolean  @default(true)
+  shopifyId    String?  @unique
+  images       Json?
+  variants     Json?
   createdAt    DateTime @default(now())
   updatedAt    DateTime @updatedAt
 }

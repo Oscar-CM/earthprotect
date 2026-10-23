@@ -15,6 +15,9 @@ async function getDbItems(): Promise<ShopItem[]> {
       price: r.price, imageUrl: r.imageUrl,
       category: r.category as ShopItem['category'],
       tags: r.tags, inStock: r.inStock, proceedsNote: r.proceedsNote,
+      shopifyId: r.shopifyId,
+      images: (r.images as string[] | null) ?? [],
+      variants: (r.variants as unknown as ShopItem['variants']) ?? [],
     }))
   } catch { return [] }
 }

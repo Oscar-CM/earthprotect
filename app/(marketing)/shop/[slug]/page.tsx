@@ -6,6 +6,7 @@ import { ArrowLeft, ShoppingCart, Leaf, ChevronRight, Tag } from 'lucide-react'
 import { SHOP_ITEMS } from '@/lib/constants'
 import type { ShopItem } from '@/types'
 import { ShopDetailClient } from './ShopDetailClient'
+import { ShopGallery } from './ShopGallery'
 
 async function getItem(slug: string): Promise<ShopItem | null> {
   try {
@@ -17,6 +18,9 @@ async function getItem(slug: string): Promise<ShopItem | null> {
         price: r.price, imageUrl: r.imageUrl,
         category: r.category as ShopItem['category'],
         tags: r.tags, inStock: r.inStock, proceedsNote: r.proceedsNote,
+        shopifyId: r.shopifyId,
+        images: (r.images as string[] | null) ?? [],
+        variants: (r.variants as unknown as ShopItem['variants']) ?? [],
       }
     }
   } catch { /* fall through */ }
@@ -79,16 +83,10 @@ export default async function ShopItemPage({ params }: { params: Promise<{ slug:
         <div className="grid lg:grid-cols-2 gap-12 mb-20">
           {/* Image */}
           <div className="space-y-4">
-            <div
-              className="w-full aspect-square rounded-2xl overflow-hidden shadow-lg"
-              style={{ border: '1px solid var(--ep-border)' }}
-            >
-              <img
-                src={item.imageUrl}
-                alt={item.name}
-                className="w-full h-full object-cover"
-              />
-            </div>
+            <ShopGallery
+              images={item.images && item.images.length > 0 ? item.images : [item.imageUrl]}
+              alt={item.name}
+            />
             {!item.inStock && (
               <div
                 className="p-3 rounded-xl text-center text-sm font-semibold"
@@ -128,7 +126,12 @@ export default async function ShopItemPage({ params }: { params: Promise<{ slug:
             </h1>
 
             <p className="text-4xl font-bold mb-6" style={{ color: 'var(--ep-primary)' }}>
-              ${item.price.toFixed(2)}
+              {(() => {
+                const prices = (item.variants ?? []).map((v) => v.price)
+                const min = prices.length ? Math.min(...prices) : item.price
+                const max = prices.length ? Math.max(...prices) : item.price
+                return min !== max ? `From $${min.toFixed(2)}` : `$${min.toFixed(2)}`
+              })()}
             </p>
 
             <p className="text-base leading-relaxed mb-6" style={{ color: 'var(--ep-muted)' }}>
@@ -150,9 +153,11 @@ export default async function ShopItemPage({ params }: { params: Promise<{ slug:
             {/* Add to cart — client island */}
             <ShopDetailClient item={item} />
 
-            <p className="text-xs text-center mt-4" style={{ color: 'var(--ep-muted)' }}>
-              Secure checkout via Stripe · Free returns within 30 days
-            </p>
+            {!item.shopifyId && (
+              <p className="text-xs text-center mt-4" style={{ color: 'var(--ep-muted)' }}>
+                Secure checkout via Stripe · Free returns within 30 days
+              </p>
+            )}
 
             <div className="mt-6 pt-6" style={{ borderTop: '1px solid var(--ep-border)' }}>
               <Link

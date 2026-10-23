@@ -1,5 +1,6 @@
 export const dynamic = 'force-dynamic'
 
+import { describeJobRoleKey } from '@/lib/careers'
 import { Badge } from '@/components/ui/badge'
 import { Users, Leaf, Globe, Mail, MapPin, Calendar, MessageSquare } from 'lucide-react'
 import { updateApplicationStatus } from '@/app/actions/join'
@@ -34,7 +35,7 @@ export default async function AdminMembersPage({
   try {
     const { prisma } = await import('@/lib/prisma')
     applications = await prisma.joinApplication.findMany({
-      where: filterRole !== 'all' ? { role: filterRole } : undefined,
+      where: filterRole !== 'all' ? { role: filterRole } : { NOT: { role: { startsWith: 'job:' } } },
       orderBy: { createdAt: 'desc' },
     }) as Application[]
   } catch { /* DB not connected */ }
@@ -46,7 +47,7 @@ export default async function AdminMembersPage({
   if (filterRole !== 'all') {
     try {
       const { prisma } = await import('@/lib/prisma')
-      allApplications = await prisma.joinApplication.findMany({ orderBy: { createdAt: 'desc' } }) as Application[]
+      allApplications = await prisma.joinApplication.findMany({ where: { NOT: { role: { startsWith: 'job:' } } }, orderBy: { createdAt: 'desc' } }) as Application[]
     } catch { /* ignore */ }
   }
   counts.all = allApplications.length
@@ -102,7 +103,7 @@ export default async function AdminMembersPage({
           <Users size={36} className="mx-auto mb-3" style={{ color: 'var(--ep-muted)' }} />
           <p className="font-semibold" style={{ color: 'var(--ep-text)' }}>No applications yet</p>
           <p className="text-sm mt-1" style={{ color: 'var(--ep-muted)' }}>
-            Applications from the Join page will appear here.
+            Applications from the Join page will appear here. Job applications are under Careers.
           </p>
         </div>
       ) : (
@@ -112,7 +113,7 @@ export default async function AdminMembersPage({
             const roleLabel = app.role === 'community' ? 'Community Member'
               : app.role === 'volunteer' ? 'Field Volunteer'
               : app.role === 'ambassador' ? 'Brand Ambassador'
-              : app.role
+              : describeJobRoleKey(app.role) ?? app.role
             const RoleIcon = app.role === 'community' ? Users
               : app.role === 'volunteer' ? Leaf
               : Globe
@@ -180,7 +181,7 @@ export default async function AdminMembersPage({
                 {/* Motivation */}
                 {app.motivation && (
                   <div
-                    className="mt-4 p-3 rounded-lg text-sm leading-relaxed"
+                    className="mt-4 p-3 rounded-lg text-sm leading-relaxed whitespace-pre-line"
                     style={{ background: 'var(--ep-bg2)', color: 'var(--ep-muted)' }}
                   >
                     <p className="flex items-center gap-1.5 text-xs font-semibold mb-1.5" style={{ color: 'var(--ep-text)' }}>

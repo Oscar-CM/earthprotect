@@ -3,8 +3,8 @@ export const dynamic = 'force-dynamic'
 import Link from 'next/link'
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
-import { deleteShopItem, toggleShopItemPublished } from '@/app/actions/shop'
-import { Plus, Pencil, Trash2, Eye, EyeOff } from 'lucide-react'
+import { deleteShopItem, toggleShopItemPublished, syncShopifyProducts } from '@/app/actions/shop'
+import { Plus, Pencil, Trash2, Eye, EyeOff, RefreshCw } from 'lucide-react'
 
 type ShopItemRow = {
   id: string; slug: string; name: string; category: string
@@ -29,11 +29,18 @@ export default async function AdminShopPage() {
             {items.length} item{items.length !== 1 ? 's' : ''} in the shop
           </p>
         </div>
-        <Link href="/admin/shop/new">
-          <Button className="flex items-center gap-1.5 text-white" style={{ background: 'var(--ep-primary)', border: 'none' }}>
-            <Plus size={16} /> Add Item
-          </Button>
-        </Link>
+        <div className="flex items-center gap-2">
+          <form action={syncShopifyProducts}>
+            <Button type="submit" variant="outline" className="flex items-center gap-1.5" style={{ borderColor: 'var(--ep-border)', color: 'var(--ep-text)' }}>
+              <RefreshCw size={16} /> Sync from Shopify
+            </Button>
+          </form>
+          <Link href="/admin/shop/new">
+            <Button className="flex items-center gap-1.5 text-white" style={{ background: 'var(--ep-primary)', border: 'none' }}>
+              <Plus size={16} /> Add Item
+            </Button>
+          </Link>
+        </div>
       </div>
 
       {items.length === 0 ? (

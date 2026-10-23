@@ -68,14 +68,21 @@ export async function createDonationCheckout(
 
 export async function createAdoptionSubscription(
   animalSlug: string,
-  animalName: string,
-  tierLabel: string,
-  amount: number,
-  interval: 'month' | 'year',
+  tierId: string,
   donorEmail: string,
   donorName: string
 ) {
   const baseUrl = process.env.NEXT_PUBLIC_BASE_URL ?? 'http://localhost:3000'
+
+  // Resolve animal and price server-side; never trust client-supplied amounts.
+  const { getAnimalBySlug } = await import('@/lib/animals')
+  const animal = await getAnimalBySlug(animalSlug)
+  const tier = animal?.adoptionTiers.find((t) => t.id === tierId)
+  if (!animal || !tier) throw new Error('Adoption tier not found')
+  const animalName = animal.name
+  const tierLabel = tier.label
+  const amount = tier.amount
+  const interval: 'month' | 'year' = tier.interval === 'year' ? 'year' : 'month'
 
   const session = await stripe.checkout.sessions.create({
     mode: 'subscription',
@@ -87,7 +94,7 @@ export async function createAdoptionSubscription(
           currency: 'usd',
           product_data: {
             name: `Adopt a ${animalName} — ${tierLabel}`,
-            description: `Monthly sponsorship supporting ${animalName} conservation in Africa.`,
+            description: `${interval === 'year' ? 'Annual' : 'Monthly'} sponsorship supporting ${animalName} conservation in Africa.`,
           },
           unit_amount: Math.round(amount * 100),
           recurring: { interval },

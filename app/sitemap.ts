@@ -37,6 +37,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     { url: `${base}/shop`, lastModified: now, changeFrequency: 'weekly', priority: 0.7 },
     { url: `${base}/about`, lastModified: now, changeFrequency: 'monthly', priority: 0.6 },
     { url: `${base}/regions`, lastModified: now, changeFrequency: 'monthly', priority: 0.6 },
+    { url: `${base}/careers`, lastModified: now, changeFrequency: 'monthly', priority: 0.5 },
     { url: `${base}/join`, lastModified: now, changeFrequency: 'monthly', priority: 0.5 },
 
     // Animal detail pages

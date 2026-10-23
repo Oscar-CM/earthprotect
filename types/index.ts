@@ -102,6 +102,14 @@ export interface DonationTier {
   featured?: boolean
 }
 
+export interface ShopItemVariant {
+  id: string
+  title: string
+  price: number
+  available: boolean
+  options: Record<string, string>
+}
+
 export interface ShopItem {
   id: string
   slug: string
@@ -115,6 +123,9 @@ export interface ShopItem {
   stripePriceId?: string
   inStock: boolean
   proceedsNote: string
+  shopifyId?: string | null
+  images?: string[]
+  variants?: ShopItemVariant[]
 }
 
 export interface CartItem {
