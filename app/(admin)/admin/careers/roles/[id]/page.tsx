@@ -3,10 +3,17 @@ export const dynamic = 'force-dynamic'
 import { notFound } from 'next/navigation'
 import { prisma } from '@/lib/prisma'
 import { createCareerRole, updateCareerRole } from '@/app/actions/careers-admin'
-import { Area, Check, Field, FormActions, PageHeading, Section } from '../../_components/fields'
+import { Area, Check, Field, FormActions, FormError, PageHeading, Section } from '../../_components/fields'
 
-export default async function RoleFormPage({ params }: { params: Promise<{ id: string }> }) {
+export default async function RoleFormPage({
+  params,
+  searchParams,
+}: {
+  params: Promise<{ id: string }>
+  searchParams: Promise<{ error?: string }>
+}) {
   const { id } = await params
+  const { error } = await searchParams
   const role = id === 'new' ? null : await prisma.careerRole.findUnique({ where: { id } })
   if (id !== 'new' && !role) notFound()
 
@@ -15,6 +22,7 @@ export default async function RoleFormPage({ params }: { params: Promise<{ id: s
   return (
     <form action={action} className="space-y-5 max-w-2xl">
       <PageHeading title={role ? `Edit ${role.title}` : 'Add role'} subtitle="The default job description. Each country can add to it from its opening." />
+      <FormError message={error} />
       <Section title="Role">
         <div className="grid grid-cols-2 gap-3">
           <Field label="Job title *" name="title" defaultValue={role?.title} required />

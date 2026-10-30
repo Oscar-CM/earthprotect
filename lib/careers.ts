@@ -215,6 +215,7 @@ export function describeJobRoleKey(key: string): string | null {
 export const APPLICATION_STAGES = [
   { id: 'applied', label: 'Applied', bg: '#dbeafe', color: '#1e40af' },
   { id: 'screening', label: 'Screening', bg: '#fef9c3', color: '#854d0e' },
+  { id: 'shortlisted', label: 'Shortlisted · CV requested', bg: '#e0f2fe', color: '#075985' },
   { id: 'interview', label: 'Interview', bg: '#ede9fe', color: '#5b21b6' },
   { id: 'reference_check', label: 'Reference & background checks', bg: '#ffedd5', color: '#9a3412' },
   { id: 'offer', label: 'Offer made', bg: '#cffafe', color: '#155e75' },
@@ -234,6 +235,18 @@ export function stageToStatus(stage: string): 'pending' | 'approved' | 'rejected
   if (stage === 'hired') return 'approved'
   if (stage === 'rejected' || stage === 'withdrawn') return 'rejected'
   return 'pending'
+}
+
+export const CAREERS_EMAIL = 'info@earthprotect.org'
+
+/** Subject line shortlisted candidates should use when emailing their CV. */
+export function cvEmailSubject(roleTitle: string, countryName: string) {
+  return `CV: ${roleTitle}, ${countryName}`
+}
+
+/** Public link that opens the careers page on a specific opening. */
+export function jobShareUrl(baseUrl: string, openingId: string) {
+  return `${baseUrl.replace(/\/$/, '')}/careers?job=${encodeURIComponent(openingId)}`
 }
 
 export const OPENING_STATUSES = [

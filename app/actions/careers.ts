@@ -1,6 +1,6 @@
 'use server'
 
-import { openingAvailability } from '@/lib/careers'
+import { cvEmailSubject, openingAvailability } from '@/lib/careers'
 
 export async function submitJobApplication(data: {
   firstName: string
@@ -90,7 +90,7 @@ export async function submitJobApplication(data: {
               <p>We have received your application for <strong>${role.title}</strong> in <strong>${country.name}</strong>.</p>
               <div style="background:#f0fdf4;border-left:4px solid #1a5c3a;padding:16px;border-radius:4px;margin:24px 0">
                 <p style="margin:0;color:#166534;font-weight:bold">What happens next?</p>
-                <p style="margin:8px 0 0;color:#374151;font-size:14px">We review applications as they arrive. Shortlisted candidates are interviewed, and before any offer we verify identity, right to work, criminal record and references as allowed by ${country.name}'s laws. You will only be asked for documents once you are shortlisted.</p>
+                <p style="margin:8px 0 0;color:#374151;font-size:14px">We review applications as they arrive, and every application is considered on merit. If you pass the first selection, we will email you to send a CV written for the <strong>${role.title}</strong> role (subject line: <em>${cvEmailSubject(role.title, country.name)}</em>). Please do not send a CV before you are asked. Before any offer we verify identity, right to work, criminal record and references as allowed by ${country.name}'s laws.</p>
               </div>
               <p style="color:#6b7280;font-size:14px;margin-top:32px;border-top:1px solid #e5e7eb;padding-top:16px">
                 Earth Protect · Conservation for Africa's Wildlife

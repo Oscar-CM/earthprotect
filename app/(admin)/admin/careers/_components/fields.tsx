@@ -92,6 +92,15 @@ export function FormActions({ submitLabel }: { submitLabel: string }) {
   )
 }
 
+export function FormError({ message }: { message?: string }) {
+  if (!message) return null
+  return (
+    <div role="alert" className="p-3 rounded-lg text-sm" style={{ background: '#fee2e2', color: '#b91c1c' }}>
+      {message}
+    </div>
+  )
+}
+
 export function PageHeading({ title, subtitle }: { title: string; subtitle?: string }) {
   return (
     <div>

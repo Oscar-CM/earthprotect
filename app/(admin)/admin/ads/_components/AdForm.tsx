@@ -70,7 +70,7 @@ export function AdForm({ action, defaultValues }: AdFormProps) {
           <img src={defaultValues.imageUrl} alt="Preview" className="w-full max-w-xs h-32 object-cover rounded-lg mt-2" style={{ border: '1px solid var(--ep-border)' }} />
         )}
         <div className="grid grid-cols-2 gap-3">
-          <Field label="Link URL" name="linkUrl" defaultValue={defaultValues?.linkUrl ?? ''} placeholder="https://earthprotect.org/shop" />
+          <Field label="Link URL" name="linkUrl" defaultValue={defaultValues?.linkUrl ?? ''} placeholder="https://masterwriters.org/shop" />
           <Field label="Link Button Text" name="linkText" defaultValue={defaultValues?.linkText ?? ''} placeholder="Shop Now" />
         </div>
       </Section>

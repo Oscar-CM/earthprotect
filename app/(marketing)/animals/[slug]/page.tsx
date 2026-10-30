@@ -41,7 +41,7 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
   if (!animal) animal = ANIMALS.find((a) => a.slug === slug) ?? null
   if (!animal) return {}
 
-  const base = process.env.NEXT_PUBLIC_BASE_URL ?? 'https://earthprotect.org'
+  const base = process.env.NEXT_PUBLIC_BASE_URL ?? 'https://masterwriters.org'
   const pageUrl = `${base}/animals/${animal.slug}`
   const popDesc = animal.population.current
     ? ` Est. population: ${animal.population.current.toLocaleString()} (${animal.population.trend}).`
@@ -135,7 +135,7 @@ export default async function AnimalProfilePage({ params }: { params: Promise<{ 
   if (!animal) notFound()
 
   const related = ANIMALS.filter((a) => a.region === animal.region && a.slug !== animal.slug).slice(0, 3)
-  const pageUrl = `${process.env.NEXT_PUBLIC_BASE_URL ?? 'https://earthprotect.org'}/animals/${animal.slug}`
+  const pageUrl = `${process.env.NEXT_PUBLIC_BASE_URL ?? 'https://masterwriters.org'}/animals/${animal.slug}`
   const statusBg = statusColor[animal.conservationStatus] ?? '#6b7280'
 
   return (

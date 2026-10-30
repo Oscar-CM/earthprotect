@@ -2,7 +2,7 @@ import type { MetadataRoute } from 'next'
 import { ANIMALS, BLOG_POSTS, SHOP_ITEMS } from '@/lib/constants'
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
-  const base = process.env.NEXT_PUBLIC_BASE_URL ?? 'https://earthprotect.org'
+  const base = process.env.NEXT_PUBLIC_BASE_URL ?? 'https://masterwriters.org'
   const now = new Date()
 
   // Fetch DB animals and blog posts

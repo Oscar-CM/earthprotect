@@ -14,10 +14,10 @@ const breadcrumbLd = {
   '@context': 'https://schema.org',
   '@type': 'WebSite',
   name: 'Earth Protect',
-  url: process.env.NEXT_PUBLIC_BASE_URL ?? 'https://earthprotect.org',
+  url: process.env.NEXT_PUBLIC_BASE_URL ?? 'https://masterwriters.org',
   potentialAction: {
     '@type': 'SearchAction',
-    target: `${process.env.NEXT_PUBLIC_BASE_URL ?? 'https://earthprotect.org'}/animals?q={search_term_string}`,
+    target: `${process.env.NEXT_PUBLIC_BASE_URL ?? 'https://masterwriters.org'}/animals?q={search_term_string}`,
     'query-input': 'required name=search_term_string',
   },
 }

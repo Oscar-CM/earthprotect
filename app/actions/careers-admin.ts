@@ -36,6 +36,21 @@ function refresh() {
   revalidatePath('/admin/careers')
 }
 
+/** Send the admin back to the form with a message (redirect throws, so callers stop here). */
+function fail(path: string, message: string): never {
+  redirect(`${path}?error=${encodeURIComponent(message)}`)
+}
+
+/** Runs a write and turns a unique-constraint violation into a visible form error. */
+async function saveOrFail(back: string, duplicateMessage: string, write: () => Promise<unknown>) {
+  try {
+    await write()
+  } catch (err) {
+    if ((err as { code?: string })?.code === 'P2002') fail(back, duplicateMessage)
+    throw err
+  }
+}
+
 export async function importCareerDefaults() {
   await requireAdmin()
   await seedCareerDefaults()
@@ -58,21 +73,28 @@ function countryData(formData: FormData) {
   }
 }
 
+const DUPLICATE_COUNTRY = 'A country with that ISO code already exists.'
+
 export async function createCareerCountry(formData: FormData) {
   await requireAdmin()
-  await prisma.careerCountry.create({
-    data: { code: str(formData, 'code').toUpperCase(), ...countryData(formData) },
-  })
+  const back = '/admin/careers/countries/new'
+  const data = countryData(formData)
+  if (!data.name) fail(back, 'Country name is required.')
+  await saveOrFail(back, DUPLICATE_COUNTRY, () =>
+    prisma.careerCountry.create({ data: { code: str(formData, 'code').toUpperCase(), ...data } }),
+  )
   refresh()
   redirect('/admin/careers')
 }
 
 export async function updateCareerCountry(id: string, formData: FormData) {
   await requireAdmin()
-  await prisma.careerCountry.update({
-    where: { id },
-    data: { code: str(formData, 'code').toUpperCase(), ...countryData(formData) },
-  })
+  const back = `/admin/careers/countries/${id}`
+  const data = countryData(formData)
+  if (!data.name) fail(back, 'Country name is required.')
+  await saveOrFail(back, DUPLICATE_COUNTRY, () =>
+    prisma.careerCountry.update({ where: { id }, data: { code: str(formData, 'code').toUpperCase(), ...data } }),
+  )
   refresh()
   redirect('/admin/careers')
 }
@@ -100,18 +122,28 @@ function roleData(formData: FormData) {
   }
 }
 
+const DUPLICATE_ROLE = 'A role with that slug already exists. Change the slug or the title.'
+
 export async function createCareerRole(formData: FormData) {
   await requireAdmin()
+  const back = '/admin/careers/roles/new'
   const data = roleData(formData)
-  await prisma.careerRole.create({ data: { slug: str(formData, 'slug') || toSlug(data.title), ...data } })
+  if (!data.title || !data.summary) fail(back, 'Title and summary are required.')
+  await saveOrFail(back, DUPLICATE_ROLE, () =>
+    prisma.careerRole.create({ data: { slug: str(formData, 'slug') || toSlug(data.title), ...data } }),
+  )
   refresh()
   redirect('/admin/careers')
 }
 
 export async function updateCareerRole(id: string, formData: FormData) {
   await requireAdmin()
+  const back = `/admin/careers/roles/${id}`
   const data = roleData(formData)
-  await prisma.careerRole.update({ where: { id }, data: { slug: str(formData, 'slug') || toSlug(data.title), ...data } })
+  if (!data.title || !data.summary) fail(back, 'Title and summary are required.')
+  await saveOrFail(back, DUPLICATE_ROLE, () =>
+    prisma.careerRole.update({ where: { id }, data: { slug: str(formData, 'slug') || toSlug(data.title), ...data } }),
+  )
   refresh()
   redirect('/admin/careers')
 }
@@ -125,6 +157,13 @@ export async function deleteCareerRole(id: string) {
 
 /* ── Openings (a role in a country) ────────────────────────────── */
 
+/** The closing date is the last day applicants can apply, so it runs to the end of that day. */
+function optEndOfDay(formData: FormData, key: string) {
+  const d = optDate(formData, key)
+  if (d) d.setUTCHours(23, 59, 59, 999)
+  return d
+}
+
 function openingData(formData: FormData) {
   return {
     status: str(formData, 'status') || 'open',
@@ -132,7 +171,7 @@ function openingData(formData: FormData) {
     location: optStr(formData, 'location'),
     salary: optStr(formData, 'salary'),
     opensAt: optDate(formData, 'opensAt'),
-    closesAt: optDate(formData, 'closesAt'),
+    closesAt: optEndOfDay(formData, 'closesAt'),
     summaryOverride: optStr(formData, 'summaryOverride'),
     extraResponsibilities: splitLines(formData.get('extraResponsibilities')),
     extraRequirements: splitLines(formData.get('extraRequirements')),
@@ -142,18 +181,33 @@ function openingData(formData: FormData) {
   }
 }
 
+const DUPLICATE_OPENING = 'That role already has an opening in that country. Edit the existing opening instead.'
+
+function checkDates(back: string, data: ReturnType<typeof openingData>) {
+  if (data.opensAt && data.closesAt && data.closesAt < data.opensAt) {
+    fail(back, 'The closing date must be on or after the opening date.')
+  }
+}
+
 export async function createCareerOpening(formData: FormData) {
   await requireAdmin()
-  await prisma.careerOpening.create({
-    data: { countryId: str(formData, 'countryId'), roleId: str(formData, 'roleId'), ...openingData(formData) },
-  })
+  const back = '/admin/careers/openings/new'
+  const countryId = str(formData, 'countryId')
+  const roleId = str(formData, 'roleId')
+  if (!countryId || !roleId) fail(back, 'Choose a country and a role. Add them first if the lists are empty.')
+  const data = openingData(formData)
+  checkDates(back, data)
+  await saveOrFail(back, DUPLICATE_OPENING, () => prisma.careerOpening.create({ data: { countryId, roleId, ...data } }))
   refresh()
   redirect('/admin/careers')
 }
 
 export async function updateCareerOpening(id: string, formData: FormData) {
   await requireAdmin()
-  await prisma.careerOpening.update({ where: { id }, data: openingData(formData) })
+  const back = `/admin/careers/openings/${id}`
+  const data = openingData(formData)
+  checkDates(back, data)
+  await prisma.careerOpening.update({ where: { id }, data })
   refresh()
   redirect('/admin/careers')
 }

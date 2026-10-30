@@ -3,10 +3,17 @@ export const dynamic = 'force-dynamic'
 import { notFound } from 'next/navigation'
 import { prisma } from '@/lib/prisma'
 import { createCareerCountry, updateCareerCountry } from '@/app/actions/careers-admin'
-import { Area, Check, Field, FormActions, PageHeading, Section } from '../../_components/fields'
+import { Area, Check, Field, FormActions, FormError, PageHeading, Section } from '../../_components/fields'
 
-export default async function CountryFormPage({ params }: { params: Promise<{ id: string }> }) {
+export default async function CountryFormPage({
+  params,
+  searchParams,
+}: {
+  params: Promise<{ id: string }>
+  searchParams: Promise<{ error?: string }>
+}) {
   const { id } = await params
+  const { error } = await searchParams
   const country = id === 'new' ? null : await prisma.careerCountry.findUnique({ where: { id } })
   if (id !== 'new' && !country) notFound()
 
@@ -15,6 +22,7 @@ export default async function CountryFormPage({ params }: { params: Promise<{ id
   return (
     <form action={action} className="space-y-5 max-w-2xl">
       <PageHeading title={country ? `Edit ${country.name}` : 'Add country'} subtitle="Country details and the vetting and legal requirements shown to applicants." />
+      <FormError message={error} />
       <Section title="Country">
         <div className="grid grid-cols-2 gap-3">
           <Field label="Country name *" name="name" defaultValue={country?.name} required />

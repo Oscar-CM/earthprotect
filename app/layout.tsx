@@ -2,7 +2,7 @@ import type { Metadata } from 'next'
 import type { ReactNode } from 'react'
 import './globals.css'
 
-const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL ?? 'https://earthprotect.org'
+const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL ?? 'https://masterwriters.org'
 const OG_IMAGE = `${BASE_URL}/og-image.png`
 
 export const metadata: Metadata = {

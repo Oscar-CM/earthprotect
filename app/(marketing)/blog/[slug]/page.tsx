@@ -49,7 +49,7 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
   const post = await getPost(slug)
   if (!post) return {}
 
-  const base = process.env.NEXT_PUBLIC_BASE_URL ?? 'https://earthprotect.org'
+  const base = process.env.NEXT_PUBLIC_BASE_URL ?? 'https://masterwriters.org'
   const pageUrl = `${base}/blog/${post.slug}`
 
   return {
@@ -108,7 +108,7 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
   const [post, ads] = await Promise.all([getPost(slug), getAds()])
   if (!post) notFound()
 
-  const pageUrl = `${process.env.NEXT_PUBLIC_BASE_URL ?? 'https://earthprotect.org'}/blog/${post.slug}`
+  const pageUrl = `${process.env.NEXT_PUBLIC_BASE_URL ?? 'https://masterwriters.org'}/blog/${post.slug}`
   const adMap = new Map(ads.map(a => [a.slug, a]))
   const segments = post.content ? parseContent(post.content) : []
 

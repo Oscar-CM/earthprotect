@@ -4,12 +4,20 @@ import { notFound } from 'next/navigation'
 import { prisma } from '@/lib/prisma'
 import { createCareerOpening, updateCareerOpening } from '@/app/actions/careers-admin'
 import { OPENING_STATUSES, timelineToText } from '@/lib/careers'
-import { Area, Field, FormActions, PageHeading, Section, SelectField } from '../../_components/fields'
+import Link from 'next/link'
+import { Area, Field, FormActions, FormError, PageHeading, Section, SelectField } from '../../_components/fields'
 
 const dateInput = (d: Date | null | undefined) => (d ? d.toISOString().slice(0, 10) : '')
 
-export default async function OpeningFormPage({ params }: { params: Promise<{ id: string }> }) {
+export default async function OpeningFormPage({
+  params,
+  searchParams,
+}: {
+  params: Promise<{ id: string }>
+  searchParams: Promise<{ error?: string }>
+}) {
   const { id } = await params
+  const { error } = await searchParams
   const [opening, countries, roles] = await Promise.all([
     id === 'new' ? null : prisma.careerOpening.findUnique({ where: { id }, include: { country: true, role: true } }),
     prisma.careerCountry.findMany({ orderBy: [{ sortOrder: 'asc' }, { name: 'asc' }] }),
@@ -19,12 +27,32 @@ export default async function OpeningFormPage({ params }: { params: Promise<{ id
 
   const action = opening ? updateCareerOpening.bind(null, opening.id) : createCareerOpening
 
+  if (!opening && (countries.length === 0 || roles.length === 0)) {
+    return (
+      <div className="space-y-4 max-w-2xl">
+        <PageHeading title="Add opening" subtitle="An opening is a role in a specific country." />
+        <Section title="Add these first">
+          <p className="text-sm" style={{ color: 'var(--ep-muted)' }}>
+            You need at least one country and one role before you can create an opening.
+          </p>
+          <div className="flex gap-4 text-sm underline" style={{ color: 'var(--ep-primary)' }}>
+            {countries.length === 0 && <Link href="/admin/careers/countries/new">Add a country</Link>}
+            {roles.length === 0 && <Link href="/admin/careers/roles/new">Add a role</Link>}
+          </div>
+        </Section>
+      </div>
+    )
+  }
+
+  const hiddenNote = (c: { published: boolean }) => (c.published ? '' : ' (hidden)')
+
   return (
     <form action={action} className="space-y-5 max-w-2xl">
       <PageHeading
         title={opening ? `${opening.role.title}, ${opening.country.name}` : 'Add opening'}
         subtitle="A role in a specific country. Anything added here is shown on top of the default job description."
       />
+      <FormError message={error} />
       <Section title="Position">
         {opening ? (
           <p className="text-sm" style={{ color: 'var(--ep-muted)' }}>
@@ -32,8 +60,8 @@ export default async function OpeningFormPage({ params }: { params: Promise<{ id
           </p>
         ) : (
           <div className="grid grid-cols-2 gap-3">
-            <SelectField label="Country *" name="countryId" options={countries.map((c) => ({ value: c.id, label: `${c.flag} ${c.name}` }))} />
-            <SelectField label="Role *" name="roleId" options={roles.map((r) => ({ value: r.id, label: r.title }))} />
+            <SelectField label="Country *" name="countryId" options={countries.map((c) => ({ value: c.id, label: `${c.flag} ${c.name}${hiddenNote(c)}` }))} />
+            <SelectField label="Role *" name="roleId" options={roles.map((r) => ({ value: r.id, label: `${r.title}${hiddenNote(r)}` }))} />
           </div>
         )}
         <div className="grid grid-cols-2 gap-3">

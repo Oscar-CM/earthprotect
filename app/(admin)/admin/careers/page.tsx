@@ -1,7 +1,7 @@
 export const dynamic = 'force-dynamic'
 
 import Link from 'next/link'
-import { Plus, Pencil, Trash2, Users, Download } from 'lucide-react'
+import { Plus, Pencil, Trash2, Users, Download, Share2 } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { prisma } from '@/lib/prisma'
 import {
@@ -110,6 +110,9 @@ export default async function AdminCareersPage() {
                     <td className="px-4 py-3">
                       <div className="flex items-center gap-3">
                         <Link href={`/admin/careers/openings/${o.id}`} className="hover:opacity-70" aria-label="Edit opening"><Pencil size={15} style={{ color: 'var(--ep-primary)' }} /></Link>
+                        {o.status !== 'draft' && (
+                          <Link href={`/careers?job=${o.id}`} target="_blank" className="hover:opacity-70" aria-label="Open public page with share buttons"><Share2 size={15} style={{ color: 'var(--ep-primary)' }} /></Link>
+                        )}
                         <form action={setCareerOpeningStatus.bind(null, o.id, next)}>
                           <button type="submit" className="text-xs font-medium hover:opacity-70" style={{ color: 'var(--ep-muted)' }}>
                             {o.status === 'open' ? 'Close' : 'Open'}

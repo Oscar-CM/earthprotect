@@ -1,12 +1,13 @@
 'use client'
 
-import { useRef, useState, useTransition } from 'react'
-import { Check, ShieldCheck, Scale, ChevronDown, Loader2, AlertCircle, Briefcase, MapPin, CalendarDays } from 'lucide-react'
+import { useEffect, useRef, useState, useTransition } from 'react'
+import { Check, ShieldCheck, Scale, ChevronDown, Loader2, AlertCircle, Briefcase, MapPin, CalendarDays, FileText, Award } from 'lucide-react'
 import { SectionTitle } from '@/components/shared/SectionTitle'
+import { ShareJob } from '@/components/shared/ShareJob'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Textarea } from '@/components/ui/textarea'
-import type { PublicCountry } from '@/lib/careers'
+import { CAREERS_EMAIL, cvEmailSubject, jobShareUrl, type PublicCountry } from '@/lib/careers'
 import { submitJobApplication } from '@/app/actions/careers'
 
 const EMPTY_FORM = {
@@ -25,15 +26,31 @@ function fmtDate(iso: string) {
   return new Date(iso).toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' })
 }
 
-export function CareersClient({ countries }: { countries: PublicCountry[] }) {
-  const [countryCode, setCountryCode] = useState(countries[0]?.code ?? '')
-  const [openRole, setOpenRole] = useState<string | null>(null)
+export function CareersClient({
+  countries,
+  baseUrl,
+  initialJobId,
+}: {
+  countries: PublicCountry[]
+  baseUrl: string
+  initialJobId: string | null
+}) {
+  const linkedCountry = initialJobId ? countries.find((c) => c.openings.some((o) => o.id === initialJobId)) : undefined
+  const [countryCode, setCountryCode] = useState(linkedCountry?.code ?? countries[0]?.code ?? '')
+  const [openRole, setOpenRole] = useState<string | null>(linkedCountry ? initialJobId : null)
   const [applyRole, setApplyRole] = useState<string | null>(null)
   const [submitted, setSubmitted] = useState(false)
   const [error, setError] = useState('')
   const [isPending, startTransition] = useTransition()
   const [form, setForm] = useState(EMPTY_FORM)
   const formRef = useRef<HTMLDivElement>(null)
+
+  useEffect(() => {
+    if (linkedCountry && initialJobId) {
+      document.getElementById(`job-${initialJobId}`)?.scrollIntoView({ behavior: 'smooth', block: 'start' })
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
 
   const country = countries.find((c) => c.code === countryCode) ?? countries[0]
   const role = applyRole ? country?.openings.find((o) => o.id === applyRole) : undefined
@@ -139,7 +156,8 @@ export function CareersClient({ countries }: { countries: PublicCountry[] }) {
             return (
               <div
                 key={r.id}
-                className="rounded-xl overflow-hidden"
+                id={`job-${r.id}`}
+                className="rounded-xl overflow-hidden scroll-mt-28"
                 style={{ background: 'var(--ep-card)', border: '1px solid var(--ep-border)' }}
               >
                 <button
@@ -227,7 +245,7 @@ export function CareersClient({ countries }: { countries: PublicCountry[] }) {
                 )}
 
                 {!open && canApply && (
-                  <div className="px-5 pb-5 -mt-1">
+                  <div className="px-5 pb-4 -mt-1">
                     <Button
                       onClick={() => startApply(r.id)}
                       variant="outline"
@@ -238,9 +256,40 @@ export function CareersClient({ countries }: { countries: PublicCountry[] }) {
                     </Button>
                   </div>
                 )}
+
+                <div className="px-5 py-3" style={{ borderTop: '1px solid var(--ep-border)' }}>
+                  <ShareJob url={jobShareUrl(baseUrl, r.id)} title={`${r.title}, ${country.name}`} />
+                </div>
               </div>
             )
           })}
+        </div>
+
+        {/* How selection works */}
+        <div
+          className="grid gap-5 md:grid-cols-2 p-6 rounded-xl mb-6"
+          style={{ background: 'var(--ep-card)', border: '1px solid var(--ep-border)' }}
+        >
+          <div>
+            <p className="flex items-center gap-2 font-semibold mb-2" style={{ color: 'var(--ep-text)' }}>
+              <FileText size={18} style={{ color: 'var(--ep-primary)' }} /> CV required after the first selection
+            </p>
+            <p className="text-sm" style={{ color: 'var(--ep-muted)' }}>
+              Apply with the short form below. If you pass the first selection, we will ask you to email a CV written for
+              the role you applied for (for example, a Community Coordinator CV for a Community Coordinator application), to{' '}
+              <a href={`mailto:${CAREERS_EMAIL}`} className="underline" style={{ color: 'var(--ep-primary)' }}>{CAREERS_EMAIL}</a>.
+              Please do not send a CV before you are asked.
+            </p>
+          </div>
+          <div>
+            <p className="flex items-center gap-2 font-semibold mb-2" style={{ color: 'var(--ep-text)' }}>
+              <Award size={18} style={{ color: 'var(--ep-primary)' }} /> Selection is on merit
+            </p>
+            <p className="text-sm" style={{ color: 'var(--ep-muted)' }}>
+              Every application is judged on merit: your skills, experience and fit for the role. Tribe, gender, connections
+              or payment play no part, and we never charge a fee at any stage of recruitment.
+            </p>
+          </div>
         </div>
 
         {/* Compliance */}
@@ -294,7 +343,8 @@ export function CareersClient({ countries }: { countries: PublicCountry[] }) {
                 Application submitted
               </h3>
               <p className="text-sm" style={{ color: 'var(--ep-muted)' }}>
-                Thank you. Check your inbox for a confirmation. We will contact shortlisted candidates directly.
+                Thank you. Check your inbox for a confirmation. Applications are considered on merit. If you pass the first
+                selection, we will email you to send a CV tailored to the role you applied for.
               </p>
             </div>
           ) : role ? (
@@ -302,6 +352,10 @@ export function CareersClient({ countries }: { countries: PublicCountry[] }) {
               <h3 className="text-lg font-bold mb-5" style={{ fontFamily: 'var(--font-lora)', color: 'var(--ep-text)' }}>
                 Apply: {role.title}, {country.name}
               </h3>
+              <p className="text-xs mb-5 -mt-3" style={{ color: 'var(--ep-muted)' }}>
+                No CV needed yet. If you pass the first selection, you will be asked to email a CV for this role
+                (subject: &ldquo;{cvEmailSubject(role.title, country.name)}&rdquo;). Applications are considered on merit.
+              </p>
               <form onSubmit={handleSubmit} className="space-y-4">
                 <div className="grid grid-cols-2 gap-3">
                   <Input aria-label="First name" placeholder="First name" required disabled={isPending} style={field}
